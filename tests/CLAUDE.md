@@ -26,7 +26,7 @@
 
 ## Patterns
 
-```typescript
+````typescript
 import { parseMarkdown } from "../src/markdown"
 
 test("parses console fence", () => {
@@ -34,7 +34,7 @@ test("parses console fence", () => {
   expect(codeBlocks).toHaveLength(1)
   expect(codeBlocks[0]!.lang).toBe("console")
 })
-```
+````
 
 Self-testing: `mdtest-e2e.test.ts` registers `*.test.md` files in the test directory, so mdtest tests itself.
 

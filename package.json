@@ -43,6 +43,9 @@
     "test": "bun src/index.ts tests/example.test.md tests/features.test.md",
     "typecheck": "tsc --noEmit",
     "ci": "bun run typecheck && bun test",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
     "prepare": "git config core.hooksPath .githooks 2>/dev/null || true"
   },
   "dependencies": {
@@ -61,6 +64,7 @@
     "commander": "^14.0.1",
     "typescript": "latest",
     "vite": "^6.0.0",
+    "vitepress": "^1.6.4",
     "vitest": "^3.0.0"
   }
 }

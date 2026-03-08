@@ -93,9 +93,8 @@ Capture dynamic values and reuse them later.
 
 ### Wildcard capture
 
-```
-{{name:*}}
-```
+<!-- prettier-ignore -->
+<code v-pre>{{name:*}}</code>
 
 Captures any substring and stores it as `name`:
 
@@ -108,9 +107,8 @@ id: {{myId:*}}
 
 ### Regex capture
 
-```
-{{name:/pattern/}}
-```
+<!-- prettier-ignore -->
+<code v-pre>{{name:/pattern/}}</code>
 
 Captures using a regex pattern:
 
@@ -123,7 +121,7 @@ UUID: {{uuid:/[0-9A-F-]{36}/}}
 
 ### Reusing captures
 
-Reference a previously captured value with `{{name}}` for an exact match:
+Reference a previously captured value with <code v-pre>{{name}}</code> for an exact match:
 
 ````markdown
 ```console
@@ -141,6 +139,8 @@ This is useful for testing commands that produce IDs, timestamps, or other value
 
 ## Pattern Summary
 
+<div v-pre>
+
 | Pattern | Meaning |
 |---------|---------|
 | `[...]` or `...` (alone on line) | Match zero or more lines |
@@ -149,3 +149,5 @@ This is useful for testing commands that produce IDs, timestamps, or other value
 | `{{name:*}}` | Named wildcard capture |
 | `{{name:/regex/}}` | Named regex capture |
 | `{{name}}` | Reuse captured value |
+
+</div>

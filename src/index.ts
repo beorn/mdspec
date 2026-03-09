@@ -147,6 +147,26 @@ log.debug?.("Files: %O", files)
 // -------- Constants --------
 import { DEFAULTS } from "./constants.js"
 
+// -------- Output Formatting Helpers --------
+
+/**
+ * Format a (possibly multi-line) command with a colored symbol prefix.
+ * Returns an array of formatted lines. Continuation lines use `┊` prefix.
+ */
+function formatCommandLines(command: string, color: string, symbol: string): string[] {
+  const cmdLines = command.split("\n")
+  const lines: string[] = []
+  if (cmdLines.length === 1) {
+    lines.push(`    \x1b[${color}m${symbol}\x1b[0m ${maybeTrunc(command)}`)
+  } else {
+    lines.push(`    \x1b[${color}m${symbol}\x1b[0m ${maybeTrunc(cmdLines[0]!)}`)
+    for (let j = 1; j < cmdLines.length; j++) {
+      lines.push(`    ┊ ${maybeTrunc(cmdLines[j]!)}`)
+    }
+  }
+  return lines
+}
+
 // -------- File processing & snapshot updating --------
 type Replacement = { start: number; end: number; newText: string }
 
@@ -375,16 +395,7 @@ async function testFile(
           const nonHookResults = results.filter((r) => !r.command.startsWith(">"))
           for (let i = 0; i < nonHookResults.length; i++) {
             const { command, stdout: cmdStdout } = nonHookResults[i]!
-            // Format multi-line commands with ┊ continuation
-            const cmdLines = command.split("\n")
-            if (cmdLines.length === 1) {
-              console.log(`    \x1b[32m✓\x1b[0m ${maybeTrunc(command)}`)
-            } else {
-              console.log(`    \x1b[32m✓\x1b[0m ${maybeTrunc(cmdLines[0]!)}`)
-              for (let j = 1; j < cmdLines.length; j++) {
-                console.log(`    ┊ ${maybeTrunc(cmdLines[j]!)}`)
-              }
-            }
+            formatCommandLines(command, "32", "✓").forEach((l) => console.log(l))
             cmdStdout.forEach((line: string) => console.log(`      ${maybeTrunc(line)}`))
             // Add blank line between commands only if current command has output or not last
             const hasOutput = cmdStdout.length > 0
@@ -433,16 +444,7 @@ async function testFile(
         if (!TAP) {
           const nonHookResults = results.filter((r) => !r.command.startsWith(">"))
           for (const { command } of nonHookResults) {
-            // Format multi-line commands with ┊ continuation
-            const cmdLines = command.split("\n")
-            if (cmdLines.length === 1) {
-              console.error(`    \x1b[31m✗\x1b[0m ${maybeTrunc(command)}`)
-            } else {
-              console.error(`    \x1b[31m✗\x1b[0m ${maybeTrunc(cmdLines[0]!)}`)
-              for (let j = 1; j < cmdLines.length; j++) {
-                console.error(`    ┊ ${maybeTrunc(cmdLines[j]!)}`)
-              }
-            }
+            formatCommandLines(command, "31", "✗").forEach((l) => console.error(l))
           }
           console.error("") // Blank line before error details
 

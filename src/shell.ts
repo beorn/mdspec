@@ -31,6 +31,42 @@ export interface ShellAdapter {
   execute(cmd: string[], opts?: ShellOptions): Promise<ShellResult>
 }
 
+// ============ Session Prelude Builder ============
+
+interface StateFiles {
+  envFile?: string
+  cwdFile?: string
+  funcFile?: string
+}
+
+/**
+ * Build a bash prelude script that loads session state and then runs a command.
+ * Used by CmdSession and PtySession to wrap the subprocess command.
+ *
+ * The prelude:
+ * 1. Disables errexit (set +e) so the runner can check exit codes
+ * 2. Sources environment variables from envFile (if present)
+ * 3. Restores working directory from cwdFile (if present)
+ * 4. Sources function definitions from funcFile (if present)
+ * 5. Runs the given command (without exec, since it may be a shell function)
+ */
+export function buildSessionPrelude(cmd: string, stateFiles: StateFiles): string {
+  const lines: string[] = ["set +e"]
+  if (stateFiles.envFile) {
+    lines.push(`if [ -f "${stateFiles.envFile}" ]; then set -a; . "${stateFiles.envFile}"; set +a; fi`)
+  }
+  if (stateFiles.cwdFile) {
+    lines.push(`if [ -f "${stateFiles.cwdFile}" ]; then cd "$(cat "${stateFiles.cwdFile}")" 2>/dev/null || true; fi`)
+  }
+  if (stateFiles.funcFile) {
+    lines.push(`if [ -f "${stateFiles.funcFile}" ]; then . "${stateFiles.funcFile}"; fi`)
+  }
+  // Don't use exec - the command might be a bash function from funcFile.
+  // exec only works with executables, not shell functions.
+  lines.push(cmd)
+  return lines.join("\n")
+}
+
 // ============ Shell Script Builders ============
 
 /**

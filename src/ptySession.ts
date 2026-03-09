@@ -15,12 +15,8 @@
  */
 
 import type { ShellResult } from "./shell.js"
-import { DEFAULTS } from "./constants.js"
-
-// OSC 133 escape sequence patterns
-const OSC_133_A_PATTERN = /\x1b\]133;A\x07/ // Prompt ready (ready for input)
-const OSC_133_D_PATTERN = /\x1b\]133;D(?:;(-?\d+))?\x07/ // Command complete
-const OSC_133_ANY_PATTERN = /\x1b\]133;[A-Z](?:;[^\x07]*)?\x07/g
+import { buildSessionPrelude } from "./shell.js"
+import { DEFAULTS, OSC_133_A_PATTERN, OSC_133_D_PATTERN, OSC_133_ANY_PATTERN } from "./constants.js"
 // Strip ANSI escape codes (colors, cursor movement, clearing, etc.)
 // Common codes: m=color, G=cursor column, J=clear, K=erase, H=position, A-D=move
 const ANSI_ESCAPE_PATTERN = /\x1b\[[0-9;]*[A-Za-z]/g
@@ -61,21 +57,11 @@ export class PtySession {
     this.stripAnsi = opts.stripAnsi ?? true
 
     // Build wrapper script that loads session state before running the cmd
-    // (same approach as CmdSession for compatibility)
-    const prelude: string[] = ["set +e"]
-    if (opts.envFile) {
-      prelude.push(`if [ -f "${opts.envFile}" ]; then set -a; . "${opts.envFile}"; set +a; fi`)
-    }
-    if (opts.cwdFile) {
-      prelude.push(`if [ -f "${opts.cwdFile}" ]; then cd "$(cat "${opts.cwdFile}")" 2>/dev/null || true; fi`)
-    }
-    if (opts.funcFile) {
-      prelude.push(`if [ -f "${opts.funcFile}" ]; then . "${opts.funcFile}"; fi`)
-    }
-    // Don't use exec - the command might be a bash function from funcFile.
-    // exec only works with executables, not shell functions.
-    prelude.push(cmd)
-    const wrapperScript = prelude.join("\n")
+    const wrapperScript = buildSessionPrelude(cmd, {
+      envFile: opts.envFile,
+      cwdFile: opts.cwdFile,
+      funcFile: opts.funcFile,
+    })
 
     this.proc = Bun.spawn(["bash", "-c", wrapperScript], {
       cwd: opts.cwd,

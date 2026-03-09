@@ -1,6 +1,21 @@
 // Constants and default values for mdtest
 // Centralized to avoid magic numbers scattered across the codebase
 
+// ============ OSC 133 Shell Integration Patterns ============
+// Protocol sequences (using BEL \x07 as terminator):
+// - \x1b]133;A\x07 — Prompt start (REPL is ready for input)
+// - \x1b]133;C\x07 — Command start (execution beginning)
+// - \x1b]133;D;N\x07 — Command end with exit code N
+
+/** Match OSC 133;A (prompt start — REPL is ready for input) */
+export const OSC_133_A_PATTERN = /\x1b\]133;A\x07/
+
+/** Match OSC 133;D with optional exit code: \x1b]133;D;N\x07 or \x1b]133;D\x07 */
+export const OSC_133_D_PATTERN = /\x1b\]133;D(?:;(-?\d+))?\x07/
+
+/** Match any OSC 133 sequence for stripping (global) */
+export const OSC_133_ANY_PATTERN = /\x1b\]133;[A-Z](?:;[^\x07]*)?\x07/g
+
 /**
  * Default timeout values in milliseconds
  */

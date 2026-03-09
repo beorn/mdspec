@@ -23,15 +23,8 @@
 
 import type { Subprocess } from "bun"
 import type { ShellResult } from "./shell.js"
-import { DEFAULTS } from "./constants.js"
-
-// OSC 133 escape sequence patterns (using BEL \x07 as terminator)
-// Pattern to match OSC 133;D with optional exit code: \x1b]133;D;N\x07 or \x1b]133;D\x07
-const OSC_133_D_PATTERN = /\x1b\]133;D(?:;(-?\d+))?\x07/
-// Pattern to match OSC 133;A (prompt start - REPL is ready for input)
-const OSC_133_A_PATTERN = /\x1b\]133;A\x07/
-// Pattern to match any OSC 133 sequence for stripping
-const OSC_133_ANY_PATTERN = /\x1b\]133;[A-Z](?:;[^\x07]*)?\x07/g
+import { buildSessionPrelude } from "./shell.js"
+import { DEFAULTS, OSC_133_A_PATTERN, OSC_133_D_PATTERN, OSC_133_ANY_PATTERN } from "./constants.js"
 
 export interface CmdSessionOpts {
   cwd?: string
@@ -69,20 +62,11 @@ export class CmdSession {
     this.useOsc133 = opts.useOsc133 ?? false
 
     // Build wrapper script that loads session state before running the cmd
-    const prelude: string[] = ["set +e"]
-    if (opts.envFile) {
-      prelude.push(`if [ -f "${opts.envFile}" ]; then set -a; . "${opts.envFile}"; set +a; fi`)
-    }
-    if (opts.cwdFile) {
-      prelude.push(`if [ -f "${opts.cwdFile}" ]; then cd "$(cat "${opts.cwdFile}")" 2>/dev/null || true; fi`)
-    }
-    if (opts.funcFile) {
-      prelude.push(`if [ -f "${opts.funcFile}" ]; then . "${opts.funcFile}"; fi`)
-    }
-    // Don't use exec - the command might be a bash function from funcFile.
-    // exec only works with executables, not shell functions.
-    prelude.push(cmd)
-    const wrapperScript = prelude.join("\n")
+    const wrapperScript = buildSessionPrelude(cmd, {
+      envFile: opts.envFile,
+      cwdFile: opts.cwdFile,
+      funcFile: opts.funcFile,
+    })
 
     this.proc = Bun.spawn(["bash", "-c", wrapperScript], {
       stdin: "pipe",

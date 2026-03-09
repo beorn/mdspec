@@ -7,14 +7,7 @@ mdtest exports its core types for plugin authors and integrations.
 ### Plugin Types
 
 ```typescript
-import type {
-  Plugin,
-  FileOpts,
-  BlockOpts,
-  ReplResult,
-  ExecFn,
-  PluginFactory,
-} from "@beorn/mdtest"
+import type { Plugin, FileOpts, BlockOpts, ReplResult, ExecFn, PluginFactory } from "@beorn/mdtest"
 ```
 
 #### `ReplResult`
@@ -96,12 +89,7 @@ type PluginFactory = (opts: FileOpts) => Plugin | Promise<Plugin>
 ### API Types
 
 ```typescript
-import type {
-  BlockOptions,
-  CommandResult,
-  HeadingResult,
-  FileResult,
-} from "@beorn/mdtest/api"
+import type { BlockOptions, CommandResult, HeadingResult, FileResult } from "@beorn/mdtest/api"
 ```
 
 #### `BlockOptions`

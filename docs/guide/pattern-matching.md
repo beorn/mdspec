@@ -141,13 +141,13 @@ This is useful for testing commands that produce IDs, timestamps, or other value
 
 <div v-pre>
 
-| Pattern | Meaning |
-|---------|---------|
+| Pattern                          | Meaning                  |
+| -------------------------------- | ------------------------ |
 | `[...]` or `...` (alone on line) | Match zero or more lines |
-| `[...]` or `...` (inline) | Match any characters |
-| `/regex/` | Whole-line regex match |
-| `{{name:*}}` | Named wildcard capture |
-| `{{name:/regex/}}` | Named regex capture |
-| `{{name}}` | Reuse captured value |
+| `[...]` or `...` (inline)        | Match any characters     |
+| `/regex/`                        | Whole-line regex match   |
+| `{{name:*}}`                     | Named wildcard capture   |
+| `{{name:/regex/}}`               | Named regex capture      |
+| `{{name}}`                       | Reuse captured value     |
 
 </div>

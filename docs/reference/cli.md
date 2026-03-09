@@ -10,15 +10,15 @@ mdtest [options] <patterns...>
 
 ## Options
 
-| Flag | Description | Default |
-|------|-------------|---------|
-| `-u, --update` | Update snapshots (replace expected output with actual) | `false` |
-| `--hide-body` | Hide markdown body text in output | `false` |
-| `--no-trunc` | Disable truncation of long lines | truncate at 70 chars |
-| `--dots` | Dots reporter -- dots for passing, details for failures | `false` |
-| `--tap` | TAP reporter -- output Test Anything Protocol format | `false` |
-| `-V, --version` | Show version number | |
-| `-h, --help` | Show help | |
+| Flag            | Description                                             | Default              |
+| --------------- | ------------------------------------------------------- | -------------------- |
+| `-u, --update`  | Update snapshots (replace expected output with actual)  | `false`              |
+| `--hide-body`   | Hide markdown body text in output                       | `false`              |
+| `--no-trunc`    | Disable truncation of long lines                        | truncate at 70 chars |
+| `--dots`        | Dots reporter -- dots for passing, details for failures | `false`              |
+| `--tap`         | TAP reporter -- output Test Anything Protocol format    | `false`              |
+| `-V, --version` | Show version number                                     |                      |
+| `-h, --help`    | Show help                                               |                      |
 
 ## Examples
 
@@ -64,16 +64,16 @@ DEBUG='mdtest:files' mdtest tests/example.test.md    # File creation only
 DEBUG='mdtest:session' mdtest tests/example.test.md  # Session state only
 ```
 
-| Namespace | What it shows |
-|-----------|---------------|
-| `mdtest:runner` | Test file discovery, parsing, and execution |
-| `mdtest:files` | Helper file creation from `file=` blocks |
+| Namespace        | What it shows                                  |
+| ---------------- | ---------------------------------------------- |
+| `mdtest:runner`  | Test file discovery, parsing, and execution    |
+| `mdtest:files`   | Helper file creation from `file=` blocks       |
 | `mdtest:session` | Session state management (env, cwd, functions) |
 
 ## Exit Codes
 
-| Code | Meaning |
-|------|---------|
-| `0` | All tests passed |
-| `1` | One or more tests failed |
-| `2` | No test files found |
+| Code | Meaning                  |
+| ---- | ------------------------ |
+| `0`  | All tests passed         |
+| `1`  | One or more tests failed |
+| `2`  | No test files found      |

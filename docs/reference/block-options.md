@@ -126,13 +126,13 @@ Maximum wait for subprocess to be ready before the first command. Default: 300ms
 
 Within a console block, these conventions define expected output:
 
-| Syntax | Meaning |
-|--------|---------|
-| `$ command` | Command to execute |
-| `> continuation` | Multi-line command continuation |
-| plain lines | Expected stdout |
-| `! line` | Expected stderr (without the `!` prefix) |
-| `[N]` | Expected exit code (default: 0) |
+| Syntax           | Meaning                                  |
+| ---------------- | ---------------------------------------- |
+| `$ command`      | Command to execute                       |
+| `> continuation` | Multi-line command continuation          |
+| plain lines      | Expected stdout                          |
+| `! line`         | Expected stderr (without the `!` prefix) |
+| `[N]`            | Expected exit code (default: 0)          |
 
 ## Options Merging
 

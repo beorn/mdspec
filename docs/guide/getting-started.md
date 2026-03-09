@@ -77,10 +77,10 @@ DEBUG='mdtest:*' mdtest tests/example.test.md
 
 Available namespaces:
 
-| Namespace | What it shows |
-|-----------|---------------|
-| `mdtest:runner` | Test file discovery, parsing, and execution |
-| `mdtest:files` | Helper file creation from `file=` blocks |
+| Namespace        | What it shows                                  |
+| ---------------- | ---------------------------------------------- |
+| `mdtest:runner`  | Test file discovery, parsing, and execution    |
+| `mdtest:files`   | Helper file creation from `file=` blocks       |
 | `mdtest:session` | Session state management (env, cwd, functions) |
 
 ## How It Works

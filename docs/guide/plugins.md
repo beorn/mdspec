@@ -122,12 +122,12 @@ export default function myPlugin(opts: FileOpts): Plugin {
 }
 ```
 
-| Hook | When it runs |
-|------|-------------|
-| `beforeAll` | Once before any blocks (after the first block executes) |
-| `beforeEach` | Before each block |
-| `afterEach` | After each block (even on failure) |
-| `afterAll` | Once after all blocks (even on failure) |
+| Hook         | When it runs                                            |
+| ------------ | ------------------------------------------------------- |
+| `beforeAll`  | Once before any blocks (after the first block executes) |
+| `beforeEach` | Before each block                                       |
+| `afterEach`  | After each block (even on failure)                      |
+| `afterAll`   | Once after all blocks (even on failure)                 |
 
 ## State Management
 
@@ -177,11 +177,11 @@ export default function selectivePlugin(opts: FileOpts): Plugin {
 
 Typical performance improvement with in-process plugins:
 
-| Execution Mode | Per-command overhead | 222 commands |
-|----------------|-------------------|-------------|
-| Bash subprocess (default) | ~200ms | ~44s |
-| Bun shell plugin | ~20ms | ~7s |
-| True in-process (planned) | ~1ms | ~3s |
+| Execution Mode            | Per-command overhead | 222 commands |
+| ------------------------- | -------------------- | ------------ |
+| Bash subprocess (default) | ~200ms               | ~44s         |
+| Bun shell plugin          | ~20ms                | ~7s          |
+| True in-process (planned) | ~1ms                 | ~3s          |
 
 ## Example: Real-world Plugin
 

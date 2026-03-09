@@ -28,12 +28,12 @@ expected stdout only
 ```
 ````
 
-|  | PTY (default on POSIX) | Pipe (`pty=false` or Windows) |
-|--|----------------------|-------------------------------|
-| Subprocess sees | `isTTY=true` | `isTTY=false` |
-| OSC 133 | Auto-detected | Requires `TERM_SHELL_INTEGRATION=1` |
-| stderr | Merged with stdout | Separate stream |
-| Platform | macOS, Linux | All platforms |
+|                 | PTY (default on POSIX) | Pipe (`pty=false` or Windows)       |
+| --------------- | ---------------------- | ----------------------------------- |
+| Subprocess sees | `isTTY=true`           | `isTTY=false`                       |
+| OSC 133         | Auto-detected          | Requires `TERM_SHELL_INTEGRATION=1` |
+| stderr          | Merged with stdout     | Separate stream                     |
+| Platform        | macOS, Linux           | All platforms                       |
 
 ## OSC 133 Completion Detection
 
@@ -52,11 +52,11 @@ Without OSC 133, mdtest falls back to silence-based detection -- waiting for out
 
 ## Timing Options
 
-| Option | Default (PTY) | Default (Pipe) | Description |
-|--------|--------------|----------------|-------------|
-| `startupDelay` | 300ms | 0ms | Max wait for subprocess to be ready |
-| `minWait` | 50ms | 100ms | Silence duration to assume completion |
-| `maxWait` | 2000ms | 2000ms | Maximum wait before timeout |
+| Option         | Default (PTY) | Default (Pipe) | Description                           |
+| -------------- | ------------- | -------------- | ------------------------------------- |
+| `startupDelay` | 300ms         | 0ms            | Max wait for subprocess to be ready   |
+| `minWait`      | 50ms          | 100ms          | Silence duration to assume completion |
+| `maxWait`      | 2000ms        | 2000ms         | Maximum wait before timeout           |
 
 ````markdown
 ```console cmd="slow-repl" startupDelay=500 minWait=200 maxWait=5000

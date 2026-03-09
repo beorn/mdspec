@@ -9,7 +9,7 @@ mdtest turns CLI documentation into executable tests. Write commands and expecte
 Install:
 
 ```bash
-bun add -d @beorn/mdtest
+npm install -D @beorn/mdtest
 ```
 
 Write a test (`example.test.md`):

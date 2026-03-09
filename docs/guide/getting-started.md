@@ -2,9 +2,25 @@
 
 ## Installation
 
-```bash
+::: code-group
+
+```bash [npm]
+npm install -D @beorn/mdtest
+```
+
+```bash [bun]
 bun add -d @beorn/mdtest
 ```
+
+```bash [pnpm]
+pnpm add -D @beorn/mdtest
+```
+
+```bash [yarn]
+yarn add -D @beorn/mdtest
+```
+
+:::
 
 ## Write a Test
 

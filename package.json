@@ -24,6 +24,9 @@
   "bin": {
     "mdtest": "./src/index.ts"
   },
+  "files": [
+    "src"
+  ],
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
@@ -38,6 +41,9 @@
     "./constants": "./src/constants.ts",
     "./cmdSession": "./src/cmdSession.ts",
     "./plugins/bash": "./src/plugins/bash.ts"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "test": "bun src/index.ts tests/example.test.md tests/features.test.md",

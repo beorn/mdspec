@@ -1,10 +1,10 @@
 # mdtest
 
-Write tests in markdown. Run them as code.
+**Executable Markdown Testing.**
+
+Your docs are your tests. Persistent context, pattern matching, named captures, and snapshots. Runs in Vitest and Bun.
 
 > Early release (0.x) -- API may evolve before 1.0.
-
-mdtest turns CLI documentation into executable tests. Write commands and expected output in `console` code fences, and mdtest runs them with persistent shell context, rich pattern matching, and snapshot updates. Your documentation stays accurate because it _is_ the test suite.
 
 > **Security note**: mdtest executes shell commands from markdown blocks. Do not run it on untrusted content.
 

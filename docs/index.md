@@ -3,7 +3,8 @@ layout: home
 
 hero:
   name: mdtest
-  tagline: "Markdown test runner for CLI docs and shell transcripts. Persistent shell context, pattern matching, and snapshot updates for Bun."
+  text: "Executable Markdown Testing"
+  tagline: "Your docs are your tests. Persistent context, pattern matching, named captures, and snapshots. Runs in Vitest and Bun."
   actions:
     - theme: brand
       text: Get Started

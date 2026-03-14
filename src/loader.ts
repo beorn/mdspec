@@ -21,8 +21,8 @@ const BUILTIN_PLUGINS: Record<string, PluginFactory> = {
  * 2. Relative paths (resolve from test file dir)
  * 3. Bare specifiers (use Bun's import resolution)
  *
- * @param specifier - Plugin specifier (e.g., 'bash', './plugin.ts', '@km/cli/mdtest')
- * @param testFilePath - Absolute path to the .test.md file (for relative resolution)
+ * @param specifier - Plugin specifier (e.g., 'bash', './plugin.ts', '@km/cli/mdspec')
+ * @param testFilePath - Absolute path to the .spec.md file (for relative resolution)
  * @returns Plugin factory function
  */
 export async function loadPlugin(specifier: string, testFilePath: string): Promise<PluginFactory> {

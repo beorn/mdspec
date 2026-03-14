@@ -12,7 +12,7 @@ describe("PluginExecutor.extractCommands", () => {
 
   test("$ without space is NOT treated as a command (e.g. $HOME)", () => {
     // Access private method via any cast for direct testing
-    const executor = new PluginExecutor("/fake/path.test.md", "# Test\n")
+    const executor = new PluginExecutor("/fake/path.spec.md", "# Test\n")
     const extractCommands = (executor as any).extractCommands.bind(executor)
 
     // "$HOME" should NOT be extracted as a command
@@ -21,7 +21,7 @@ describe("PluginExecutor.extractCommands", () => {
   })
 
   test("> without space is NOT treated as a continuation", () => {
-    const executor = new PluginExecutor("/fake/path.test.md", "# Test\n")
+    const executor = new PluginExecutor("/fake/path.spec.md", "# Test\n")
     const extractCommands = (executor as any).extractCommands.bind(executor)
 
     // ">file.txt" in output should not be treated as continuation
@@ -30,7 +30,7 @@ describe("PluginExecutor.extractCommands", () => {
   })
 
   test("$ with space IS a command", () => {
-    const executor = new PluginExecutor("/fake/path.test.md", "# Test\n")
+    const executor = new PluginExecutor("/fake/path.spec.md", "# Test\n")
     const extractCommands = (executor as any).extractCommands.bind(executor)
 
     const result = extractCommands("$ echo hello\nhello\n$ echo world\nworld\n")
@@ -38,7 +38,7 @@ describe("PluginExecutor.extractCommands", () => {
   })
 
   test("> with space IS a continuation", () => {
-    const executor = new PluginExecutor("/fake/path.test.md", "# Test\n")
+    const executor = new PluginExecutor("/fake/path.spec.md", "# Test\n")
     const extractCommands = (executor as any).extractCommands.bind(executor)
 
     const result = extractCommands('$ echo "line1"\n> echo "line2"\n')
@@ -46,7 +46,7 @@ describe("PluginExecutor.extractCommands", () => {
   })
 
   test("uses slice(2) for consistent extraction", () => {
-    const executor = new PluginExecutor("/fake/path.test.md", "# Test\n")
+    const executor = new PluginExecutor("/fake/path.spec.md", "# Test\n")
     const extractCommands = (executor as any).extractCommands.bind(executor)
 
     // "$ echo hello" should extract "echo hello" (not " echo hello" or "echo hello")

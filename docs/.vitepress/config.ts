@@ -3,8 +3,8 @@ import { defineConfig } from "vitepress"
 export default defineConfig({
   title: "mdspec",
   description: "Write tests in markdown. Run them as code.",
-  base: "/mdtest/",
-  head: [["link", { rel: "icon", type: "image/svg+xml", href: "/mdtest/favicon.svg" }]],
+  base: "/mdspec/",
+  head: [["link", { rel: "icon", type: "image/svg+xml", href: "/mdspec/favicon.svg" }]],
   themeConfig: {
     nav: [
       { text: "Guide", link: "/guide/getting-started" },
@@ -30,7 +30,7 @@ export default defineConfig({
         ],
       },
     ],
-    socialLinks: [{ icon: "github", link: "https://github.com/beorn/mdtest" }],
+    socialLinks: [{ icon: "github", link: "https://github.com/beorn/mdspec" }],
     footer: { message: "Released under the MIT License." },
     search: { provider: "local" },
   },

@@ -16,15 +16,15 @@
     "testing",
     "trycmd"
   ],
-  "homepage": "https://beorn.github.io/mdtest/",
+  "homepage": "https://beorn.github.io/mdspec/",
   "bugs": {
-    "url": "https://github.com/beorn/mdtest/issues"
+    "url": "https://github.com/beorn/mdspec/issues"
   },
   "license": "MIT",
   "author": "Beorn",
   "repository": {
     "type": "git",
-    "url": "https://github.com/beorn/mdtest.git"
+    "url": "https://github.com/beorn/mdspec.git"
   },
   "bin": {
     "mdspec": "./src/index.ts"
@@ -50,7 +50,7 @@
     "access": "public"
   },
   "scripts": {
-    "test": "bun src/index.ts tests/example.test.md tests/features.test.md",
+    "test": "bun src/index.ts tests/example.spec.md tests/features.spec.md",
     "typecheck": "tsc --noEmit",
     "ci": "bun run typecheck && bun test",
     "docs:dev": "vitepress dev docs",

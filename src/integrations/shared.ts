@@ -49,13 +49,13 @@ interface TestStructure {
 
 // ============ Discovery & Registration ============
 
-export async function discoverMdTests(pattern = "**/*.test.md"): Promise<string[]> {
+export async function discoverMdTests(pattern = "**/*.spec.md"): Promise<string[]> {
   return glob(pattern)
 }
 
 export async function registerMdTests(
   adapter: FrameworkAdapter,
-  pattern: string | string[] = "**/*.test.md",
+  pattern: string | string[] = "**/*.spec.md",
 ): Promise<void> {
   const files = Array.isArray(pattern) ? pattern : await discoverMdTests(pattern)
   for (const file of files) await registerMdTestFile(adapter, file)

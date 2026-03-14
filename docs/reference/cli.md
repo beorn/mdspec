@@ -6,7 +6,7 @@
 mdspec [options] <patterns...>
 ```
 
-`patterns` can be file paths or glob patterns (e.g., `tests/**/*.test.md`).
+`patterns` can be file paths or glob patterns (e.g., `tests/**/*.spec.md`).
 
 ## Options
 
@@ -24,19 +24,19 @@ mdspec [options] <patterns...>
 
 ```bash
 # Single file
-mdspec tests/example.test.md
+mdspec tests/example.spec.md
 
 # Multiple files with glob
-mdspec tests/**/*.test.md
+mdspec tests/**/*.spec.md
 
 # Update snapshots
-mdspec --update tests/**/*.test.md
+mdspec --update tests/**/*.spec.md
 
 # Minimal output
-mdspec --dots tests/**/*.test.md
+mdspec --dots tests/**/*.spec.md
 
 # CI-friendly TAP output
-mdspec --tap tests/**/*.test.md
+mdspec --tap tests/**/*.spec.md
 ```
 
 ## Reporters
@@ -58,10 +58,10 @@ Outputs [Test Anything Protocol](https://testanything.org/) format for integrati
 Enable with the `DEBUG` environment variable using the [debug](https://www.npmjs.com/package/debug) package:
 
 ```bash
-DEBUG='mdspec:*' mdspec tests/example.test.md       # All debug output
-DEBUG='mdspec:runner' mdspec tests/example.test.md   # Test execution only
-DEBUG='mdspec:files' mdspec tests/example.test.md    # File creation only
-DEBUG='mdspec:session' mdspec tests/example.test.md  # Session state only
+DEBUG='mdspec:*' mdspec tests/example.spec.md       # All debug output
+DEBUG='mdspec:runner' mdspec tests/example.spec.md   # Test execution only
+DEBUG='mdspec:files' mdspec tests/example.spec.md    # File creation only
+DEBUG='mdspec:session' mdspec tests/example.spec.md  # Session state only
 ```
 
 | Namespace        | What it shows                                  |

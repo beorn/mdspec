@@ -149,7 +149,7 @@ Features:
 Real-world example from the km project:
 
 ```typescript
-// apps/km-cli/tests/mdtest-plugin.ts
+// apps/km-cli/tests/mdspec-plugin.ts
 import { $ } from "bun"
 import type { Plugin, FileOpts, BlockOpts, ReplResult } from "mdspec/types"
 
@@ -187,7 +187,7 @@ Usage in test file:
 ```markdown
 ---
 mdspec:
-  plugin: ../apps/km-cli/tests/mdtest-plugin.ts
+  plugin: ../apps/km-cli/tests/mdspec-plugin.ts
 ---
 
 # KM CLI Tests

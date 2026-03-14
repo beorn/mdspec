@@ -27,7 +27,7 @@ Integrations (src/integrations/)
   ├── shared.ts — common test registration logic
   ├── vitest.ts — Vitest adapter
   ├── bun.ts — Bun test adapter
-  └── vitest-plugin.ts — Vite plugin for .test.md transforms
+  └── vitest-plugin.ts — Vite plugin for .spec.md transforms
 ```
 
 ## Key Files
@@ -42,7 +42,7 @@ Integrations (src/integrations/)
 | `src/integrations/shared.ts`        | Common test registration (Bun + Vitest)    |
 | `src/integrations/vitest.ts`        | Vitest integration (`registerMdTests`)     |
 | `src/integrations/bun.ts`           | Bun test runner integration                |
-| `src/integrations/vitest-plugin.ts` | Vite plugin for direct `.test.md` runs     |
+| `src/integrations/vitest-plugin.ts` | Vite plugin for direct `.spec.md` runs     |
 
 ## Subpath Exports
 

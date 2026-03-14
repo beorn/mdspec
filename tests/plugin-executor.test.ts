@@ -31,7 +31,7 @@ function createTestSetup(pluginStdout: string, pluginStderr = "") {
   )
 
   const mdContent = `---\nmdspec:\n  plugin: ./mock-plugin.ts\n---\n\n# Test\n\n\`\`\`console\n$ run\n\`\`\`\n`
-  const mdPath = join(dir, "test.test.md")
+  const mdPath = join(dir, "test.spec.md")
   writeFileSync(mdPath, mdContent)
 
   return { dir, mdPath, mdContent }

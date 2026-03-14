@@ -28,7 +28,7 @@ File-level options passed to the plugin factory. Includes all frontmatter option
 
 ```typescript
 interface FileOpts {
-  /** Absolute path to the .test.md file */
+  /** Absolute path to the .spec.md file */
   path: string
   /** All file= blocks: filename -> content */
   files: Map<string, string>
@@ -167,21 +167,21 @@ interface FileResult {
 
 ```typescript
 import { registerMdTests } from "mdspec/vitest"
-await registerMdTests("tests/**/*.test.md")
+await registerMdTests("tests/**/*.spec.md")
 ```
 
 ### Bun
 
 ```typescript
 import { registerMdTests } from "mdspec/bun"
-await registerMdTests("tests/**/*.test.md")
+await registerMdTests("tests/**/*.spec.md")
 ```
 
 ### Single File Registration
 
 ```typescript
 import { registerMdTestFile } from "mdspec/vitest"
-await registerMdTestFile("tests/specific.test.md")
+await registerMdTestFile("tests/specific.spec.md")
 ```
 
 ## Built-in Plugins

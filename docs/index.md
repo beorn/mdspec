@@ -11,7 +11,7 @@ hero:
       link: /guide/getting-started
     - theme: alt
       text: GitHub
-      link: https://github.com/beorn/mdtest
+      link: https://github.com/beorn/mdspec
 
 features:
   - title: Executable Docs

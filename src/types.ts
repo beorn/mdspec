@@ -14,7 +14,7 @@ export interface ReplResult {
  * Includes all frontmatter options and collected file= blocks
  */
 export interface FileOpts {
-  /** Absolute path to the .test.md file */
+  /** Absolute path to the .spec.md file */
   path: string
   /** All file= blocks: filename → content */
   files: Map<string, string>

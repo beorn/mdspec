@@ -1,9 +1,9 @@
-// Vitest test integration for .test.md files
+// Vitest test integration for .spec.md files
 // Usage: Create a wrapper test file that calls registerMdTests()
 //
 // Example: tests/md.test.ts
 // import { registerMdTests } from 'mdspec/vitest'
-// await registerMdTests('tests/e2e/**/*.test.md')
+// await registerMdTests('tests/e2e/**/*.spec.md')
 
 import { test, describe, beforeAll, afterAll, beforeEach, afterEach } from "vitest"
 import type { FrameworkAdapter } from "./shared.js"
@@ -27,12 +27,12 @@ const vitestAdapter: FrameworkAdapter = {
 // Re-export discovery API
 export { discoverMdTests }
 
-// Register all .test.md files as Vitest tests
-export async function registerMdTests(pattern: string | string[] = "**/*.test.md"): Promise<void> {
+// Register all .spec.md files as Vitest tests
+export async function registerMdTests(pattern: string | string[] = "**/*.spec.md"): Promise<void> {
   return registerMdTestsShared(vitestAdapter, pattern)
 }
 
-// Register a single .test.md file as Vitest tests
+// Register a single .spec.md file as Vitest tests
 export async function registerMdTestFile(filePath: string): Promise<void> {
   return registerMdTestFileShared(vitestAdapter, filePath)
 }

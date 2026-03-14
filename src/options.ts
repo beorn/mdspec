@@ -15,16 +15,16 @@ export function parseFrontmatter(markdown: string): Record<string, unknown> {
 
   // Simple YAML parser for mdspec section
   // Format: mdspec:\n  key: value
-  const mdtestMatch = yaml.match(/mdspec:\s*\n((?:  .*\n?)*)/)
-  if (!mdtestMatch) return {}
+  const mdspecMatch = yaml.match(/mdspec:\s*\n((?:  .*\n?)*)/)
+  if (!mdspecMatch) return {}
 
-  const mdtestYaml = mdtestMatch[1]
-  if (!mdtestYaml) return {}
+  const mdspecYaml = mdspecMatch[1]
+  if (!mdspecYaml) return {}
 
   const opts: Record<string, unknown> = {}
 
   // Parse key: value pairs (indented with 2 spaces)
-  for (const line of mdtestYaml.split("\n")) {
+  for (const line of mdspecYaml.split("\n")) {
     const match = line.match(/^\s\s(\w+):\s*(.+)$/)
     if (!match) continue
 

@@ -8,7 +8,7 @@
 - **Markdown**: heading parsing with depth, `findNearestHeading` for code block association
 - **Matching**: line-by-line output comparison, pattern matching (regex, glob), `splitNorm` normalization
 - **Shell**: `shellEscape` (safe strings, spaces, special chars, single quotes), `buildScript`, `buildHookScript`
-- **Vitest integration**: `registerMdTests` loading `.test.md` files into vitest
+- **Vitest integration**: `registerMdTests` loading `.spec.md` files into vitest
 - **Bun integration**: `registerMdTests` for Bun test runner (`.slow.` gated)
 - **CLI integration**: end-to-end mdspec execution via `bun` subprocess
 - **PTY sessions**: real terminal session execution (`.slow.` gated)
@@ -36,7 +36,7 @@ test("parses console fence", () => {
 })
 ````
 
-Self-testing: `mdtest-e2e.test.ts` registers `*.test.md` files in the test directory, so mdspec tests itself.
+Self-testing: `mdtest-e2e.test.ts` registers `*.spec.md` files in the test directory, so mdspec tests itself.
 
 ## Ad-Hoc Testing
 
@@ -49,7 +49,7 @@ bun vitest run tests/headings.test.ts  # Heading parsing
 
 ## Efficiency
 
-Parser and shell tests are fast (~50ms). E2E tests spawn subprocesses (~500ms). Slow tests (bun integration, PTY sessions, CLI E2E) are gated behind `.slow.` suffix. The self-hosting `mdtest-e2e.test.ts` runs `*.test.md` files which execute real shell commands (mdspec testing itself).
+Parser and shell tests are fast (~50ms). E2E tests spawn subprocesses (~500ms). Slow tests (bun integration, PTY sessions, CLI E2E) are gated behind `.slow.` suffix. The self-hosting `mdtest-e2e.test.ts` runs `*.spec.md` files which execute real shell commands (mdspec testing itself).
 
 ## See Also
 

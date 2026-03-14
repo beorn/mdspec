@@ -1,7 +1,7 @@
 # Tests
 tests/
 **/*.test.ts
-**/*.test.md
+**/*.spec.md
 
 # Documentation site
 docs/

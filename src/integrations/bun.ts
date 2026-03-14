@@ -1,9 +1,9 @@
-// Bun test integration for .test.md files
+// Bun test integration for .spec.md files
 // Usage: Create a wrapper test file that calls registerMdTests()
 //
 // Example: tests/md.test.ts
 // import { registerMdTests } from 'mdspec/bun'
-// await registerMdTests('tests/e2e/**/*.test.md')
+// await registerMdTests('tests/e2e/**/*.spec.md')
 
 import { test, describe, beforeAll, afterAll, beforeEach, afterEach } from "bun:test"
 import type { FrameworkAdapter } from "./shared.js"
@@ -27,12 +27,12 @@ const bunAdapter: FrameworkAdapter = {
 // Re-export discovery API
 export { discoverMdTests }
 
-// Register all .test.md files as Bun tests
-export async function registerMdTests(pattern: string | string[] = "**/*.test.md"): Promise<void> {
+// Register all .spec.md files as Bun tests
+export async function registerMdTests(pattern: string | string[] = "**/*.spec.md"): Promise<void> {
   return registerMdTestsShared(bunAdapter, pattern)
 }
 
-// Register a single .test.md file as Bun tests
+// Register a single .spec.md file as Bun tests
 export async function registerMdTestFile(filePath: string): Promise<void> {
   return registerMdTestFileShared(bunAdapter, filePath)
 }

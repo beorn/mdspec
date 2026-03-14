@@ -65,7 +65,7 @@ Scrut (Facebook's Rust-based Cram successor) provides a roadmap for mdspec enhan
 **Test Framework Integration** (when needed for wider adoption)
 
 - [ ] **Jest integration** - `src/integrations/jest.ts`
-  - Transform `.test.md` files via Jest transformer
+  - Transform `.spec.md` files via Jest transformer
   - Uses Node.js integration under the hood
   - Larger user base than Bun
 
@@ -128,7 +128,7 @@ After evaluating Cram, Scrut, trycmd, byexample, and mdsh:
 **Other Rejected Approaches:**
 
 - **Parallel execution within files** - Conflicts with session state persistence
-- **Direct `bun test file.test.md`** - Bun doesn't support custom file extensions yet
+- **Direct `bun test file.spec.md`** - Bun doesn't support custom file extensions yet
 - **Using Bun $ directly** - Can't persist state, can't source files
 
 ## Completed

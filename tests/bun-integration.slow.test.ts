@@ -7,7 +7,7 @@ import { $ } from "bun"
 import { fileURLToPath } from "url"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const mdtestCli = join(__dirname, "../src/index.ts")
+const mdspecCli = join(__dirname, "../src/index.ts")
 
 describe("bun integration", () => {
   describe("error output formatting", () => {
@@ -40,7 +40,7 @@ goodbye
 
     test("error output should be clean without stack traces", async () => {
       // Run mdspec on the failing test file and capture both stdout and stderr
-      const proc = Bun.spawn(["bun", mdtestCli, tempFile], {
+      const proc = Bun.spawn(["bun", mdspecCli, tempFile], {
         stdout: "pipe",
         stderr: "pipe",
       })
@@ -112,7 +112,7 @@ test B
 
     test("verify describe block nesting matches heading hierarchy", async () => {
       // Run mdspec on the test file and check output shows proper heading hierarchy
-      const result = await $`bun ${mdtestCli} ${tempFile}`.nothrow().quiet().text()
+      const result = await $`bun ${mdspecCli} ${tempFile}`.nothrow().quiet().text()
 
       // Should show proper heading structure in output
       expect(result).toContain("Setup")

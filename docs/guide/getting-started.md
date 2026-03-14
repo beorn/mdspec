@@ -35,7 +35,7 @@ yarn add -D mdspec
 
 ## Write a Test
 
-Create a file called `example.test.md`:
+Create a file called `example.spec.md`:
 
 ````markdown
 # My CLI Tests
@@ -56,7 +56,7 @@ Each `console` code fence is a test block. Lines starting with `$` are commands;
 ## Run It
 
 ```bash
-mdspec example.test.md
+mdspec example.spec.md
 ```
 
 Output is markdown-formatted with pass/fail indicators, colored diffs, and headings from your document structure.
@@ -64,7 +64,7 @@ Output is markdown-formatted with pass/fail indicators, colored diffs, and headi
 ### Glob Patterns
 
 ```bash
-mdspec tests/**/*.test.md
+mdspec tests/**/*.spec.md
 ```
 
 ### Snapshot Updates
@@ -72,7 +72,7 @@ mdspec tests/**/*.test.md
 When expected output changes, update it automatically:
 
 ```bash
-mdspec --update tests/**/*.test.md
+mdspec --update tests/**/*.spec.md
 ```
 
 The markdown file is rewritten in place with the actual output replacing the expected output.
@@ -85,7 +85,7 @@ Run markdown tests through Vitest alongside your TypeScript test suite.
 
 ```typescript
 import { registerMdTests } from "mdspec/vitest"
-await registerMdTests("tests/**/*.test.md")
+await registerMdTests("tests/**/*.spec.md")
 ```
 
 **Run:**
@@ -103,7 +103,7 @@ This gives you Vitest's reporters, `--watch` mode, `--coverage`, and `--bail` in
 Enable debug output with the `DEBUG` environment variable:
 
 ```bash
-DEBUG='mdspec:*' mdspec tests/example.test.md
+DEBUG='mdspec:*' mdspec tests/example.spec.md
 ```
 
 Available namespaces:

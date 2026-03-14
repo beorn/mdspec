@@ -1,7 +1,7 @@
 /**
- * Vitest Plugin for .test.md files
+ * Vitest Plugin for .spec.md files
  *
- * Allows running `vitest tests/foo.test.md` directly without wrapper files.
+ * Allows running `vitest tests/foo.spec.md` directly without wrapper files.
  */
 
 import type { Plugin } from "vite"
@@ -12,14 +12,14 @@ import { fileURLToPath } from "url"
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const vitestIntegrationPath = join(__dirname, "vitest.ts")
 
-export function mdtest(): Plugin {
+export function mdspec(): Plugin {
   return {
     name: "vitest-mdspec",
     enforce: "pre",
 
-    // Transform .test.md files into runnable test modules
+    // Transform .spec.md files into runnable test modules
     transform(code: string, id: string) {
-      if (!id.endsWith(".test.md")) {
+      if (!id.endsWith(".spec.md")) {
         return null
       }
 
@@ -40,4 +40,4 @@ await registerMdTestFile(${JSON.stringify(absPath)})
   }
 }
 
-export default mdtest
+export default mdspec

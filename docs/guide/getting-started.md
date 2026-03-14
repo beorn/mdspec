@@ -1,15 +1,24 @@
 # Getting Started
 
+> Early release (0.x) -- API may evolve before 1.0.
+
+## Requirements
+
+- **Bun** >= 1.0.0 (runtime and package manager)
+- **Shell**: bash / POSIX shell (macOS, Linux; Windows via WSL)
+
+> **Security note**: mdtest executes shell commands from markdown blocks. Do not run it on untrusted content.
+
 ## Installation
 
 ::: code-group
 
-```bash [npm]
-npm install -D @beorn/mdtest
-```
-
 ```bash [bun]
 bun add -d @beorn/mdtest
+```
+
+```bash [npm]
+npm install -D @beorn/mdtest
 ```
 
 ```bash [pnpm]
@@ -21,6 +30,8 @@ yarn add -D @beorn/mdtest
 ```
 
 :::
+
+> **Note**: All package managers can install mdtest, but **Bun is required to run it**. Use `bunx mdtest` or `bun mdtest` to execute tests.
 
 ## Write a Test
 
@@ -64,6 +75,8 @@ When expected output changes, update it automatically:
 mdtest --update tests/**/*.test.md
 ```
 
+The markdown file is rewritten in place with the actual output replacing the expected output.
+
 ## Vitest Integration
 
 Run markdown tests through Vitest alongside your TypeScript test suite.
@@ -82,6 +95,8 @@ bunx vitest run tests/md.test.ts
 ```
 
 This gives you Vitest's reporters, `--watch` mode, `--coverage`, and `--bail` integration.
+
+> **Note**: Vitest integration still uses Bun under the hood for test execution.
 
 ## Debug Mode
 

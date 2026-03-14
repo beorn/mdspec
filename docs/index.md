@@ -3,7 +3,7 @@ layout: home
 
 hero:
   name: mdtest
-  tagline: Write tests in markdown. Run them as code.
+  tagline: "Markdown test runner for CLI docs and shell transcripts. Persistent shell context, pattern matching, and snapshot updates for Bun."
   actions:
     - theme: brand
       text: Get Started
@@ -26,3 +26,5 @@ features:
   - title: Framework Integration
     details: Run markdown tests through Vitest or Bun alongside your TypeScript test suite.
 ---
+
+> Early release (0.x) -- API may evolve before 1.0. Requires Bun >= 1.0 and bash/POSIX shell (macOS/Linux; Windows via WSL).

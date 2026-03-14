@@ -1,10 +1,10 @@
 # mdspec
 
-**Executable Markdown Testing.**
+***Executable Markdown Testing.***
 
-Your docs are your tests. Write CLI commands and expected output in markdown code fences — mdspec runs them with persistent shell context, pattern matching, and snapshot updates.
+**Your docs are your tests. Write CLI commands and expected output in markdown code fences — mdspec runs them with persistent shell context, pattern matching, and snapshot updates.**
 
-> Early release (0.x) — API may evolve before 1.0.
+> Early release (0.x) — API may evolve before 1.0. mdspec executes shell commands from markdown blocks; do not run it on untrusted content.
 
 ## Why mdspec?
 
@@ -34,8 +34,6 @@ mdspec draws inspiration from and improves upon:
 
 - **Bun** >= 1.0.0 (runtime and package manager)
 - **Shell**: bash / POSIX shell (macOS, Linux; Windows via WSL)
-
-> **Security note**: mdspec executes shell commands from markdown blocks. Do not run it on untrusted content.
 
 ## Quick Start
 

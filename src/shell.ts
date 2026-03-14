@@ -1,5 +1,5 @@
-// Shared shell execution abstraction and helpers for mdtest
-// Allows mdtest core to work with different runtimes (Bun, Node.js, Deno)
+// Shared shell execution abstraction and helpers for mdspec
+// Allows mdspec core to work with different runtimes (Bun, Node.js, Deno)
 
 import type { BlockOptions } from "./api.js"
 

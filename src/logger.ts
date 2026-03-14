@@ -69,6 +69,6 @@ export async function getLogger(namespace: string): Promise<ConditionalLogger> {
 }
 
 // Pre-initialize common namespaces
-export const log = await getLogger("mdtest:runner")
-export const logFiles = await getLogger("mdtest:files")
-export const logSession = await getLogger("mdtest:session")
+export const log = await getLogger("mdspec:runner")
+export const logFiles = await getLogger("mdspec:files")
+export const logSession = await getLogger("mdspec:session")

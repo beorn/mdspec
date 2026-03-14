@@ -68,7 +68,7 @@ describe("bash plugin file fixtures", () => {
     const { bash } = await import("../src/plugins/bash")
 
     const originalCwd = process.cwd()
-    const testCwd = mkdtempSync(join(tmpdir(), "mdtest-fixture-test-"))
+    const testCwd = mkdtempSync(join(tmpdir(), "mdspec-fixture-test-"))
 
     try {
       process.chdir(testCwd)
@@ -94,7 +94,7 @@ describe("bash plugin file fixtures", () => {
     const { bash } = await import("../src/plugins/bash")
 
     const originalCwd = process.cwd()
-    const testCwd = mkdtempSync(join(tmpdir(), "mdtest-fixture-test-"))
+    const testCwd = mkdtempSync(join(tmpdir(), "mdspec-fixture-test-"))
 
     try {
       process.chdir(testCwd)
@@ -133,7 +133,7 @@ describe("bash plugin shellFn parameter", () => {
     }
 
     const originalCwd = process.cwd()
-    const testCwd = mkdtempSync(join(tmpdir(), "mdtest-shell-test-"))
+    const testCwd = mkdtempSync(join(tmpdir(), "mdspec-shell-test-"))
 
     try {
       process.chdir(testCwd)
@@ -169,7 +169,7 @@ describe("bash plugin shellFn parameter", () => {
     const { bash } = await import("../src/plugins/bash")
 
     const originalCwd = process.cwd()
-    const testCwd = mkdtempSync(join(tmpdir(), "mdtest-shell-test-"))
+    const testCwd = mkdtempSync(join(tmpdir(), "mdspec-shell-test-"))
 
     try {
       process.chdir(testCwd)
@@ -196,7 +196,7 @@ describe("bash plugin state dir cleanup", () => {
     const { bash } = await import("../src/plugins/bash")
 
     const originalCwd = process.cwd()
-    const testCwd = mkdtempSync(join(tmpdir(), "mdtest-cleanup-test-"))
+    const testCwd = mkdtempSync(join(tmpdir(), "mdspec-cleanup-test-"))
 
     try {
       process.chdir(testCwd)
@@ -213,7 +213,7 @@ describe("bash plugin state dir cleanup", () => {
       }
 
       // The stateDir should have been cleaned up after afterAll
-      // We verify by checking that no mdtest- dirs were left behind
+      // We verify by checking that no mdspec- dirs were left behind
       // (This is hard to test directly without exposing stateDir, but we can
       // check that the plugin's afterAll method cleans up)
       expect(plugin.afterAll).toBeDefined()

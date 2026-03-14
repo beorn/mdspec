@@ -4,7 +4,7 @@ Within a test file, shell state persists across code blocks. Environment variabl
 
 ## How It Works
 
-After each command, mdtest saves the shell state (environment variables, current directory, function definitions) to temp files. The next command loads this state before executing.
+After each command, mdspec saves the shell state (environment variables, current directory, function definitions) to temp files. The next command loads this state before executing.
 
 ````markdown
 ```console
@@ -38,8 +38,8 @@ $ greet() {
 ```
 
 ```console
-$ greet "mdtest"
-Hello, mdtest!
+$ greet "mdspec"
+Hello, mdspec!
 ```
 ````
 
@@ -73,8 +73,8 @@ export API_URL="http://localhost:3000"
 
 ```console
 $ source helpers.sh
-$ greet "mdtest"
-Hello, mdtest!
+$ greet "mdspec"
+Hello, mdspec!
 ```
 ````
 

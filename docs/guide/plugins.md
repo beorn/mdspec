@@ -1,10 +1,10 @@
-# mdtest Plugin System
+# mdspec Plugin System
 
-mdtest supports custom plugins to enable in-process command execution, replacing the default bash subprocess execution.
+mdspec supports custom plugins to enable in-process command execution, replacing the default bash subprocess execution.
 
 ## Overview
 
-By default, mdtest executes console blocks by spawning bash subprocesses for each command. This is flexible but adds ~200ms overhead per command. For test suites with hundreds of commands, this adds up to 30-40 seconds of pure subprocess overhead.
+By default, mdspec executes console blocks by spawning bash subprocesses for each command. This is flexible but adds ~200ms overhead per command. For test suites with hundreds of commands, this adds up to 30-40 seconds of pure subprocess overhead.
 
 **Plugins solve this** by allowing custom execution engines that can run commands in-process, reducing test time from ~41s to ~5s (8x speedup).
 
@@ -13,7 +13,7 @@ By default, mdtest executes console blocks by spawning bash subprocesses for eac
 A plugin is a TypeScript module that exports a factory function:
 
 ```typescript
-import type { Plugin, FileOpts, BlockOpts, ReplResult } from "@bearly/mdtest/types"
+import type { Plugin, FileOpts, BlockOpts, ReplResult } from "mdspec/types"
 
 export default function myPlugin(fileOpts: FileOpts): Plugin {
   // File-level initialization
@@ -78,7 +78,7 @@ Add frontmatter to your test file:
 
 ```markdown
 ---
-mdtest:
+mdspec:
   plugin: ./my-plugin.ts
   customOption: value
 ---
@@ -103,7 +103,7 @@ Options cascade from multiple levels:
 
 ```markdown
 ---
-mdtest:
+mdspec:
   plugin: ./plugin.ts
   fixture: default # File-level
 ---
@@ -119,10 +119,10 @@ Priority: **frontmatter** → **heading** → **fence** (later overrides earlier
 
 ## Built-in Bash Plugin
 
-The default `bash` plugin extracts mdtest's current bash execution logic:
+The default `bash` plugin extracts mdspec's current bash execution logic:
 
 ```typescript
-import { bash } from "@bearly/mdtest/plugins/bash"
+import { bash } from "mdspec/plugins/bash"
 
 export default function myPlugin(opts: FileOpts): Plugin {
   // Use bash for mixed commands
@@ -151,7 +151,7 @@ Real-world example from the km project:
 ```typescript
 // apps/km-cli/tests/mdtest-plugin.ts
 import { $ } from "bun"
-import type { Plugin, FileOpts, BlockOpts, ReplResult } from "@bearly/mdtest/types"
+import type { Plugin, FileOpts, BlockOpts, ReplResult } from "mdspec/types"
 
 export default function kmPlugin(_opts: FileOpts): Plugin {
   return {
@@ -186,7 +186,7 @@ Usage in test file:
 
 ```markdown
 ---
-mdtest:
+mdspec:
   plugin: ../apps/km-cli/tests/mdtest-plugin.ts
 ---
 
@@ -330,7 +330,7 @@ export default function selectivePlugin(opts: FileOpts): Plugin {
 Enable debug logging:
 
 ```bash
-DEBUG=mdtest:* bun run mdtest test.md
+DEBUG=mdspec:* bun run mdspec test.md
 ```
 
 This shows:

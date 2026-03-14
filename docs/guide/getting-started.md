@@ -7,31 +7,31 @@
 - **Bun** >= 1.0.0 (runtime and package manager)
 - **Shell**: bash / POSIX shell (macOS, Linux; Windows via WSL)
 
-> **Security note**: mdtest executes shell commands from markdown blocks. Do not run it on untrusted content.
+> **Security note**: mdspec executes shell commands from markdown blocks. Do not run it on untrusted content.
 
 ## Installation
 
 ::: code-group
 
 ```bash [bun]
-bun add -d @bearly/mdtest
+bun add -d mdspec
 ```
 
 ```bash [npm]
-npm install -D @bearly/mdtest
+npm install -D mdspec
 ```
 
 ```bash [pnpm]
-pnpm add -D @bearly/mdtest
+pnpm add -D mdspec
 ```
 
 ```bash [yarn]
-yarn add -D @bearly/mdtest
+yarn add -D mdspec
 ```
 
 :::
 
-> **Note**: All package managers can install mdtest, but **Bun is required to run it**. Use `bunx mdtest` or `bun mdtest` to execute tests.
+> **Note**: All package managers can install mdspec, but **Bun is required to run it**. Use `bunx mdspec` or `bun mdspec` to execute tests.
 
 ## Write a Test
 
@@ -41,8 +41,8 @@ Create a file called `example.test.md`:
 # My CLI Tests
 
 ```console
-$ echo "Hello, mdtest!"
-Hello, mdtest!
+$ echo "Hello, mdspec!"
+Hello, mdspec!
 ```
 
 ```console
@@ -56,7 +56,7 @@ Each `console` code fence is a test block. Lines starting with `$` are commands;
 ## Run It
 
 ```bash
-mdtest example.test.md
+mdspec example.test.md
 ```
 
 Output is markdown-formatted with pass/fail indicators, colored diffs, and headings from your document structure.
@@ -64,7 +64,7 @@ Output is markdown-formatted with pass/fail indicators, colored diffs, and headi
 ### Glob Patterns
 
 ```bash
-mdtest tests/**/*.test.md
+mdspec tests/**/*.test.md
 ```
 
 ### Snapshot Updates
@@ -72,7 +72,7 @@ mdtest tests/**/*.test.md
 When expected output changes, update it automatically:
 
 ```bash
-mdtest --update tests/**/*.test.md
+mdspec --update tests/**/*.test.md
 ```
 
 The markdown file is rewritten in place with the actual output replacing the expected output.
@@ -84,7 +84,7 @@ Run markdown tests through Vitest alongside your TypeScript test suite.
 **Setup:** Create a test file (e.g., `tests/md.test.ts`):
 
 ```typescript
-import { registerMdTests } from "@bearly/mdtest/vitest"
+import { registerMdTests } from "mdspec/vitest"
 await registerMdTests("tests/**/*.test.md")
 ```
 
@@ -103,16 +103,16 @@ This gives you Vitest's reporters, `--watch` mode, `--coverage`, and `--bail` in
 Enable debug output with the `DEBUG` environment variable:
 
 ```bash
-DEBUG='mdtest:*' mdtest tests/example.test.md
+DEBUG='mdspec:*' mdspec tests/example.test.md
 ```
 
 Available namespaces:
 
 | Namespace        | What it shows                                  |
 | ---------------- | ---------------------------------------------- |
-| `mdtest:runner`  | Test file discovery, parsing, and execution    |
-| `mdtest:files`   | Helper file creation from `file=` blocks       |
-| `mdtest:session` | Session state management (env, cwd, functions) |
+| `mdspec:runner`  | Test file discovery, parsing, and execution    |
+| `mdspec:files`   | Helper file creation from `file=` blocks       |
+| `mdspec:session` | Session state management (env, cwd, functions) |
 
 ## How It Works
 

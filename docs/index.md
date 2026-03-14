@@ -2,7 +2,7 @@
 layout: home
 
 hero:
-  name: mdtest
+  name: mdspec
   text: "Executable Markdown Testing"
   tagline: "Your docs are your tests. Persistent context, pattern matching, named captures, and snapshots. Runs in Vitest and Bun."
   actions:

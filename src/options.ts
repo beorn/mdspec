@@ -1,10 +1,10 @@
-// Options parsing and merging for mdtest plugin system
+// Options parsing and merging for mdspec plugin system
 
 import { parseInfo } from "./core.js"
 
 /**
  * Parse YAML frontmatter from markdown
- * Returns the mdtest section (or empty object if no frontmatter)
+ * Returns the mdspec section (or empty object if no frontmatter)
  */
 export function parseFrontmatter(markdown: string): Record<string, unknown> {
   const frontmatterMatch = markdown.match(/^---\n([\s\S]*?)\n---/)
@@ -13,9 +13,9 @@ export function parseFrontmatter(markdown: string): Record<string, unknown> {
   const yaml = frontmatterMatch[1]
   if (!yaml) return {}
 
-  // Simple YAML parser for mdtest section
-  // Format: mdtest:\n  key: value
-  const mdtestMatch = yaml.match(/mdtest:\s*\n((?:  .*\n?)*)/)
+  // Simple YAML parser for mdspec section
+  // Format: mdspec:\n  key: value
+  const mdtestMatch = yaml.match(/mdspec:\s*\n((?:  .*\n?)*)/)
   if (!mdtestMatch) return {}
 
   const mdtestYaml = mdtestMatch[1]

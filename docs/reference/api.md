@@ -2,12 +2,12 @@
 
 ## TypeScript Types
 
-mdtest exports its core types for plugin authors and integrations.
+mdspec exports its core types for plugin authors and integrations.
 
 ### Plugin Types
 
 ```typescript
-import type { Plugin, FileOpts, BlockOpts, ReplResult, ExecFn, PluginFactory } from "@bearly/mdtest/types"
+import type { Plugin, FileOpts, BlockOpts, ReplResult, ExecFn, PluginFactory } from "mdspec/types"
 ```
 
 #### `ReplResult`
@@ -89,7 +89,7 @@ type PluginFactory = (opts: FileOpts) => Plugin | Promise<Plugin>
 ### API Types
 
 ```typescript
-import type { BlockOptions, CommandResult, HeadingResult, FileResult } from "@bearly/mdtest/api"
+import type { BlockOptions, CommandResult, HeadingResult, FileResult } from "mdspec/api"
 ```
 
 #### `BlockOptions`
@@ -166,21 +166,21 @@ interface FileResult {
 ### Vitest
 
 ```typescript
-import { registerMdTests } from "@bearly/mdtest/vitest"
+import { registerMdTests } from "mdspec/vitest"
 await registerMdTests("tests/**/*.test.md")
 ```
 
 ### Bun
 
 ```typescript
-import { registerMdTests } from "@bearly/mdtest/bun"
+import { registerMdTests } from "mdspec/bun"
 await registerMdTests("tests/**/*.test.md")
 ```
 
 ### Single File Registration
 
 ```typescript
-import { registerMdTestFile } from "@bearly/mdtest/vitest"
+import { registerMdTestFile } from "mdspec/vitest"
 await registerMdTestFile("tests/specific.test.md")
 ```
 
@@ -191,5 +191,5 @@ await registerMdTestFile("tests/specific.test.md")
 The default bash plugin is available for composition:
 
 ```typescript
-import { bash } from "@bearly/mdtest/plugins/bash"
+import { bash } from "mdspec/plugins/bash"
 ```

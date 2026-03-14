@@ -15,7 +15,7 @@ describe("bun integration", () => {
     let tempDir: string
 
     beforeAll(() => {
-      tempDir = mkdtempSync(join(tmpdir(), "mdtest-error-test-"))
+      tempDir = mkdtempSync(join(tmpdir(), "mdspec-error-test-"))
       tempFile = join(tempDir, "test-error.md")
 
       // Create a test markdown file that will fail
@@ -39,7 +39,7 @@ goodbye
     })
 
     test("error output should be clean without stack traces", async () => {
-      // Run mdtest on the failing test file and capture both stdout and stderr
+      // Run mdspec on the failing test file and capture both stdout and stderr
       const proc = Bun.spawn(["bun", mdtestCli, tempFile], {
         stdout: "pipe",
         stderr: "pipe",
@@ -66,7 +66,7 @@ goodbye
     let tempDir: string
 
     beforeAll(() => {
-      tempDir = mkdtempSync(join(tmpdir(), "mdtest-heading-test-"))
+      tempDir = mkdtempSync(join(tmpdir(), "mdspec-heading-test-"))
       tempFile = join(tempDir, "test.md")
 
       // Create a test markdown file with clear heading structure
@@ -111,7 +111,7 @@ test B
     })
 
     test("verify describe block nesting matches heading hierarchy", async () => {
-      // Run mdtest on the test file and check output shows proper heading hierarchy
+      // Run mdspec on the test file and check output shows proper heading hierarchy
       const result = await $`bun ${mdtestCli} ${tempFile}`.nothrow().quiet().text()
 
       // Should show proper heading structure in output

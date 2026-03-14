@@ -1,5 +1,5 @@
 {
-  "name": "@bearly/mdtest",
+  "name": "mdspec",
   "version": "0.3.0",
   "description": "Markdown test runner for CLI docs and shell transcripts. Cram-style console blocks, persistent shell context, pattern matching, and snapshot updates for Bun.",
   "keywords": [
@@ -27,7 +27,7 @@
     "url": "https://github.com/beorn/mdtest.git"
   },
   "bin": {
-    "mdtest": "./src/index.ts"
+    "mdspec": "./src/index.ts"
   },
   "files": [
     "src"

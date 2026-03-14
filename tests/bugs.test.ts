@@ -1,4 +1,4 @@
-// Tests for bug fixes in mdtest
+// Tests for bug fixes in mdspec
 // Bug 1: km-mdtest.session-exit-code — sessions report exitCode=0 when OSC 133 unavailable
 // Bug 2: km-mdtest.before-all-first-block — beforeAll() only works when defined in first block
 // Bug 3: km-mdtest.hook-cleanup-no-finally — afterEach/afterAll not protected by try/finally

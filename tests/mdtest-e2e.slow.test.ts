@@ -1,4 +1,4 @@
-// Wrapper to register mdtest's own .test.md files with Bun test runner
+// Wrapper to register mdspec's own .test.md files with Bun test runner
 import { registerMdTests } from "../src/integrations/bun.js"
 import { fileURLToPath } from "url"
 import { dirname, join } from "path"

@@ -10,7 +10,7 @@ import { join } from "node:path"
  * The mock plugin returns fixed stdout/stderr for any command.
  */
 function createTestSetup(pluginStdout: string, pluginStderr = "") {
-  const dir = mkdtempSync(join(tmpdir(), "mdtest-plugin-test-"))
+  const dir = mkdtempSync(join(tmpdir(), "mdspec-plugin-test-"))
 
   // Write a mock plugin that returns fixed output
   const pluginPath = join(dir, "mock-plugin.ts")
@@ -30,7 +30,7 @@ function createTestSetup(pluginStdout: string, pluginStderr = "") {
 `,
   )
 
-  const mdContent = `---\nmdtest:\n  plugin: ./mock-plugin.ts\n---\n\n# Test\n\n\`\`\`console\n$ run\n\`\`\`\n`
+  const mdContent = `---\nmdspec:\n  plugin: ./mock-plugin.ts\n---\n\n# Test\n\n\`\`\`console\n$ run\n\`\`\`\n`
   const mdPath = join(dir, "test.test.md")
   writeFileSync(mdPath, mdContent)
 

@@ -1,4 +1,4 @@
-// mdtest core - pure functions for parsing and matching
+// mdspec core - pure functions for parsing and matching
 // These functions have no side effects and are easy to test
 
 import type { BlockOptions } from "./api.js"

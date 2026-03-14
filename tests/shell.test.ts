@@ -64,7 +64,7 @@ describe("shell", () => {
     let funcFile: string
 
     beforeEach(() => {
-      tempDir = mkdtempSync(join(tmpdir(), "mdtest-shell-test-"))
+      tempDir = mkdtempSync(join(tmpdir(), "mdspec-shell-test-"))
       envFile = join(tempDir, "test.env.sh")
       cwdFile = join(tempDir, "test.cwd.txt")
       funcFile = join(tempDir, "test.func.sh")
@@ -142,7 +142,7 @@ describe("shell", () => {
     let funcFile: string
 
     beforeEach(() => {
-      tempDir = mkdtempSync(join(tmpdir(), "mdtest-hook-test-"))
+      tempDir = mkdtempSync(join(tmpdir(), "mdspec-hook-test-"))
       envFile = join(tempDir, "test.env.sh")
       cwdFile = join(tempDir, "test.cwd.txt")
       funcFile = join(tempDir, "test.func.sh")

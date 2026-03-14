@@ -1,4 +1,4 @@
-# mdtest Development Roadmap
+# mdspec Development Roadmap
 
 ## In Progress
 
@@ -19,7 +19,7 @@ None - ready for next high priority items
 
 **Scrut-Inspired Features**
 
-Scrut (Facebook's Rust-based Cram successor) provides a roadmap for mdtest enhancements:
+Scrut (Facebook's Rust-based Cram successor) provides a roadmap for mdspec enhancements:
 
 - [ ] **Detached processes** - `console detached` for server/daemon testing
   - Track PIDs, auto-cleanup on test completion
@@ -54,7 +54,7 @@ Scrut (Facebook's Rust-based Cram successor) provides a roadmap for mdtest enhan
 - [ ] **Node.js runtime support** - `src/integrations/node.ts`
   - Implement `shell()` using `child_process.spawn()`
   - Same interface as Bun integration
-  - Enables mdtest without Bun dependency
+  - Enables mdspec without Bun dependency
   - ~50 LOC (copy Bun integration, swap spawn method)
 
 - [ ] **Deno runtime support** - `src/integrations/deno.ts`
@@ -102,7 +102,7 @@ Scrut (Facebook's Rust-based Cram successor) provides a roadmap for mdtest enhan
   - **Issue**: `Bun.spawn()` returns empty stdout/stderr when run inside `bun test`
   - **Status**: Bug confirmed and reported to Bun maintainers (Nov 13, 2025)
   - **Minimal reproduction**: `tests/bun-bugs.test.ts` - expects failure, will alert when Bun fixes it
-  - **Workaround**: Use mdtest CLI instead of Bun test runner (documented in package.json scripts)
+  - **Workaround**: Use mdspec CLI instead of Bun test runner (documented in package.json scripts)
   - **Next steps**: Wait for Bun fix, then re-enable bun test integration
 
 ## Rejected
@@ -114,7 +114,7 @@ After evaluating Cram, Scrut, trycmd, byexample, and mdsh:
 - **Cram/byexample** rejected due to Python dependency, isolation issues, no named captures
 - **Scrut** is best external tool but lacks named captures, requires Rust binary
 - **trycmd** excellent for Rust but not applicable to Bun/TypeScript
-- **Decision**: Build mdtest as Bun-native solution, learn from Scrut's feature set
+- **Decision**: Build mdspec as Bun-native solution, learn from Scrut's feature set
 
 **Smart Bash Parsing**
 

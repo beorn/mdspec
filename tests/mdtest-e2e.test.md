@@ -1,6 +1,6 @@
-# mdtest Integration Tests
+# mdspec Integration Tests
 
-Comprehensive feature testing using mdtest to test itself.
+Comprehensive feature testing using mdspec to test itself.
 
 ## Setup
 
@@ -51,9 +51,9 @@ $ pwd
 ## File Operations
 
 ```console
-$ echo "Hello, mdtest!" > message.txt
+$ echo "Hello, mdspec!" > message.txt
 $ cat message.txt
-Hello, mdtest!
+Hello, mdspec!
 ```
 
 ## Timestamped Output
@@ -163,8 +163,8 @@ $ echo "Error!" >&2
 $ greet() {
 >   echo "Hello, $1!"
 > }
-$ greet "mdtest"
-Hello, mdtest!
+$ greet "mdspec"
+Hello, mdspec!
 ```
 
 ## Function Persistence

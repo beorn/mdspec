@@ -15,7 +15,7 @@ function mkBlock(code: string, info = ""): string {
 }
 
 function createTestFile(content: string): string {
-  const dir = mkdtempSync(join(tmpdir(), "mdtest-test-"))
+  const dir = mkdtempSync(join(tmpdir(), "mdspec-test-"))
   const file = join(dir, "test.md")
   writeFileSync(file, `# Test\n${content}`)
   return file
@@ -413,7 +413,7 @@ describe("cli", () => {
   })
 
   test.concurrent("beforeAll hook", async () => {
-    const dir = mkdtempSync(join(tmpdir(), "mdtest-test-"))
+    const dir = mkdtempSync(join(tmpdir(), "mdspec-test-"))
     const file = join(dir, "test.md")
     const counterFile = join(dir, "counter.txt")
     writeFileSync(

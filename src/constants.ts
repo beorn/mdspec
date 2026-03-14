@@ -1,4 +1,4 @@
-// Constants and default values for mdtest
+// Constants and default values for mdspec
 // Centralized to avoid magic numbers scattered across the codebase
 
 // ============ OSC 133 Shell Integration Patterns ============

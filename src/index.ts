@@ -1,7 +1,7 @@
-// mdtest — Cram-style Markdown doctest runner (Bun, per-command execution with state persistence)
+// mdspec — Cram-style Markdown doctest runner (Bun, per-command execution with state persistence)
 //
 // Usage:
-//   bun mdtest [--update] <file.md> [more.md ...]
+//   bun mdspec [--update] <file.md> [more.md ...]
 //
 // Fences (cram style only):
 //   ```console     (preferred for nice highlighting)   or   ```sh
@@ -99,7 +99,7 @@ async function getVersion(): Promise<string> {
 
 // -------- CLI Setup --------
 const program = new Command()
-  .name("mdtest")
+  .name("mdspec")
   .description("Markdown-based shell testing with persistent context")
   .version(await getVersion())
   .argument("<patterns...>", "Test file paths or glob patterns (e.g., tests/**/*.test.md)")
@@ -187,7 +187,7 @@ async function testFile(
 
   // ADR-004: Auto-chdir to temp directory for test isolation
   const originalCwd = process.cwd()
-  const testTempDir = mkdtempSync(join(tmpdir(), "mdtest-"))
+  const testTempDir = mkdtempSync(join(tmpdir(), "mdspec-"))
   log.debug?.("Created temp directory: %s", testTempDir)
 
   // Set ROOT to original project root for tests to reference source

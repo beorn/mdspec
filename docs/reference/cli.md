@@ -3,7 +3,7 @@
 ## Usage
 
 ```bash
-mdtest [options] <patterns...>
+mdspec [options] <patterns...>
 ```
 
 `patterns` can be file paths or glob patterns (e.g., `tests/**/*.test.md`).
@@ -24,19 +24,19 @@ mdtest [options] <patterns...>
 
 ```bash
 # Single file
-mdtest tests/example.test.md
+mdspec tests/example.test.md
 
 # Multiple files with glob
-mdtest tests/**/*.test.md
+mdspec tests/**/*.test.md
 
 # Update snapshots
-mdtest --update tests/**/*.test.md
+mdspec --update tests/**/*.test.md
 
 # Minimal output
-mdtest --dots tests/**/*.test.md
+mdspec --dots tests/**/*.test.md
 
 # CI-friendly TAP output
-mdtest --tap tests/**/*.test.md
+mdspec --tap tests/**/*.test.md
 ```
 
 ## Reporters
@@ -58,17 +58,17 @@ Outputs [Test Anything Protocol](https://testanything.org/) format for integrati
 Enable with the `DEBUG` environment variable using the [debug](https://www.npmjs.com/package/debug) package:
 
 ```bash
-DEBUG='mdtest:*' mdtest tests/example.test.md       # All debug output
-DEBUG='mdtest:runner' mdtest tests/example.test.md   # Test execution only
-DEBUG='mdtest:files' mdtest tests/example.test.md    # File creation only
-DEBUG='mdtest:session' mdtest tests/example.test.md  # Session state only
+DEBUG='mdspec:*' mdspec tests/example.test.md       # All debug output
+DEBUG='mdspec:runner' mdspec tests/example.test.md   # Test execution only
+DEBUG='mdspec:files' mdspec tests/example.test.md    # File creation only
+DEBUG='mdspec:session' mdspec tests/example.test.md  # Session state only
 ```
 
 | Namespace        | What it shows                                  |
 | ---------------- | ---------------------------------------------- |
-| `mdtest:runner`  | Test file discovery, parsing, and execution    |
-| `mdtest:files`   | Helper file creation from `file=` blocks       |
-| `mdtest:session` | Session state management (env, cwd, functions) |
+| `mdspec:runner`  | Test file discovery, parsing, and execution    |
+| `mdspec:files`   | Helper file creation from `file=` blocks       |
+| `mdspec:session` | Session state management (env, cwd, functions) |
 
 ## Exit Codes
 

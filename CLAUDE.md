@@ -1,6 +1,6 @@
-# mdtest
+# mdspec
 
-Bun-native Cram-style markdown testing. Write CLI commands and expected output in `console` code fences — mdtest runs them with persistent shell context, pattern matching, and snapshot updates.
+Bun-native Cram-style markdown testing. Write CLI commands and expected output in `console` code fences — mdspec runs them with persistent shell context, pattern matching, and snapshot updates.
 
 ## Commands
 
@@ -47,11 +47,11 @@ Integrations (src/integrations/)
 ## Subpath Exports
 
 ```typescript
-import { registerMdTests } from "@bearly/mdtest/vitest" // Vitest integration
-import { registerMdTests } from "@bearly/mdtest/bun" // Bun integration
-import { parseBlock, matchLines } from "@bearly/mdtest/core" // Core parsing/matching
-import { shellEscape } from "@bearly/mdtest/shell" // Shell utilities
-import type { Plugin, FileOpts, BlockOpts, ReplResult } from "@bearly/mdtest/types" // Plugin types
+import { registerMdTests } from "mdspec/vitest" // Vitest integration
+import { registerMdTests } from "mdspec/bun" // Bun integration
+import { parseBlock, matchLines } from "mdspec/core" // Core parsing/matching
+import { shellEscape } from "mdspec/shell" // Shell utilities
+import type { Plugin, FileOpts, BlockOpts, ReplResult } from "mdspec/types" // Plugin types
 ```
 
 ## Code Style

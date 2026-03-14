@@ -1,4 +1,4 @@
-// Plugin execution wrapper for mdtest
+// Plugin execution wrapper for mdspec
 // Bridges between old block execution and new plugin system
 
 import type { Plugin, FileOpts, BlockOpts, ReplResult } from "./types.js"

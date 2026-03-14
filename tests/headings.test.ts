@@ -1,4 +1,4 @@
-// Test that mdtest properly parses and associates headings with code blocks
+// Test that mdspec properly parses and associates headings with code blocks
 import { describe, test, expect } from "vitest"
 import { parseMarkdown, findNearestHeading } from "../src/markdown.js"
 

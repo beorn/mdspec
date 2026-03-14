@@ -17,7 +17,7 @@ A single subprocess is started for the block. Commands are sent to stdin and out
 
 ## PTY vs Pipe Mode
 
-On POSIX systems (macOS, Linux), mdtest uses PTY mode by default, giving the subprocess a real terminal (`isTTY = true`). This enables TTY-aware features like colors, prompts, and OSC 133 completion detection.
+On POSIX systems (macOS, Linux), mdspec uses PTY mode by default, giving the subprocess a real terminal (`isTTY = true`). This enables TTY-aware features like colors, prompts, and OSC 133 completion detection.
 
 Force pipe mode with `pty=false` when you need separate stderr capture:
 
@@ -48,7 +48,7 @@ if (process.stdout.isTTY) {
 }
 ```
 
-Without OSC 133, mdtest falls back to silence-based detection -- waiting for output to stop for a configurable duration.
+Without OSC 133, mdspec falls back to silence-based detection -- waiting for output to stop for a configurable duration.
 
 ## Timing Options
 

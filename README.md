@@ -1,4 +1,4 @@
-# mdtest
+# mdspec
 
 **Executable Markdown Testing.**
 
@@ -6,7 +6,7 @@ Your docs are your tests. Persistent context, pattern matching, named captures, 
 
 > Early release (0.x) -- API may evolve before 1.0.
 
-> **Security note**: mdtest executes shell commands from markdown blocks. Do not run it on untrusted content.
+> **Security note**: mdspec executes shell commands from markdown blocks. Do not run it on untrusted content.
 
 ## Requirements
 
@@ -18,7 +18,7 @@ Your docs are your tests. Persistent context, pattern matching, named captures, 
 Install:
 
 ```bash
-bun add -d @bearly/mdtest
+bun add -d mdspec
 ```
 
 Write a test (`example.test.md`):
@@ -27,8 +27,8 @@ Write a test (`example.test.md`):
 # My CLI
 
 ```console
-$ echo "Hello, mdtest!"
-Hello, mdtest!
+$ echo "Hello, mdspec!"
+Hello, mdspec!
 ```
 
 ```console
@@ -40,15 +40,15 @@ $ date +"%Y"
 Run it:
 
 ```bash
-mdtest example.test.md
+mdspec example.test.md
 ```
 
 ### When Tests Fail
 
-When expected output changes, mdtest shows a colored diff. Update snapshots automatically:
+When expected output changes, mdspec shows a colored diff. Update snapshots automatically:
 
 ```bash
-mdtest --update example.test.md
+mdspec --update example.test.md
 ```
 
 The markdown file is rewritten in place with the actual output replacing the expected output.
@@ -94,7 +94,7 @@ Replace bash subprocess execution with in-process plugins for up to 8x faster te
 
 ```markdown
 ---
-mdtest:
+mdspec:
   plugin: ./my-plugin.ts
 ---
 ```
@@ -130,17 +130,17 @@ $ cat config.json
 ## CLI
 
 ```bash
-mdtest <patterns...>          # Run tests
-mdtest --update tests/*.md    # Update snapshots
-mdtest --dots tests/*.md      # Compact dots reporter
-mdtest --tap tests/*.md       # TAP output
+mdspec <patterns...>          # Run tests
+mdspec --update tests/*.md    # Update snapshots
+mdspec --dots tests/*.md      # Compact dots reporter
+mdspec --tap tests/*.md       # TAP output
 ```
 
 ## Vitest Integration
 
 ```typescript
 // tests/md.test.ts
-import { registerMdTests } from "@bearly/mdtest/vitest"
+import { registerMdTests } from "mdspec/vitest"
 await registerMdTests("tests/**/*.test.md")
 ```
 

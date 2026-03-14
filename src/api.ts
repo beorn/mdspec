@@ -1,4 +1,4 @@
-// Public API for mdtest - used by integrations and standalone CLI
+// Public API for mdspec - used by integrations and standalone CLI
 
 export interface BlockOptions {
   exit?: number
@@ -16,7 +16,7 @@ export interface BlockOptions {
 }
 
 // Note: Programmatic API is not yet implemented.
-// Use the CLI (mdtest) or Bun integration (@bearly/mdtest/bun) instead.
+// Use the CLI (mdspec) or Bun integration (mdspec/bun) instead.
 // See README.md for usage.
 
 export interface CommandResult {

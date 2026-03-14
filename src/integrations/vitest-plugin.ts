@@ -14,7 +14,7 @@ const vitestIntegrationPath = join(__dirname, "vitest.ts")
 
 export function mdtest(): Plugin {
   return {
-    name: "vitest-mdtest",
+    name: "vitest-mdspec",
     enforce: "pre",
 
     // Transform .test.md files into runnable test modules

@@ -1,4 +1,4 @@
-// Plugin system types for mdtest
+// Plugin system types for mdspec
 
 /**
  * Result of executing a single command

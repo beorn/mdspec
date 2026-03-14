@@ -1,4 +1,4 @@
-// Plugin loader for mdtest
+// Plugin loader for mdspec
 // Handles resolution and loading of built-in and custom plugins
 
 import { resolve, dirname } from "node:path"

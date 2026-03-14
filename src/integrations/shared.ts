@@ -159,7 +159,7 @@ function registerTests(
 
     adapter.beforeAll(async () => {
       originalCwd = process.cwd()
-      tempDir = mkdtempSync(join(tmpdir(), "mdtest-"))
+      tempDir = mkdtempSync(join(tmpdir(), "mdspec-"))
       process.chdir(tempDir)
 
       if (!process.env.ROOT) {

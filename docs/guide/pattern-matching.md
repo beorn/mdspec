@@ -1,6 +1,6 @@
 # Pattern Matching
 
-mdtest provides rich pattern matching for asserting against dynamic output.
+mdspec provides rich pattern matching for asserting against dynamic output.
 
 ## Ellipsis Wildcards
 

@@ -144,7 +144,7 @@ Options can be set at three levels. Later levels override earlier ones:
 
 ```markdown
 ---
-mdtest:
+mdspec:
   plugin: ./plugin.ts
   fixture: default
 ---

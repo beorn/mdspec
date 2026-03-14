@@ -1,7 +1,7 @@
 import { defineConfig } from "vitepress"
 
 export default defineConfig({
-  title: "mdtest",
+  title: "mdspec",
   description: "Write tests in markdown. Run them as code.",
   base: "/mdtest/",
   head: [["link", { rel: "icon", type: "image/svg+xml", href: "/mdtest/favicon.svg" }]],

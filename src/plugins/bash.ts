@@ -1,4 +1,4 @@
-// Bash plugin for mdtest - default execution mode
+// Bash plugin for mdspec - default execution mode
 // Extracts state-based bash execution logic into plugin interface
 
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs"
@@ -21,14 +21,14 @@ export interface BashPluginOptions {
 }
 
 /**
- * Bash plugin - default mdtest execution mode
+ * Bash plugin - default mdspec execution mode
  * Uses stateful bash execution with env/cwd/function persistence
  */
 export function bash(opts: FileOpts, pluginOpts?: BashPluginOptions): Plugin {
   const shell: ShellFn = pluginOpts?.shellFn ?? bunShell
 
   // Create temp directory for state files
-  const stateDir = mkdtempSync(join(tmpdir(), "mdtest-"))
+  const stateDir = mkdtempSync(join(tmpdir(), "mdspec-"))
   const envFile = join(stateDir, ".env")
   const cwdFile = join(stateDir, ".cwd")
   const funcFile = join(stateDir, ".functions")

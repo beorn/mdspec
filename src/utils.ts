@@ -1,4 +1,4 @@
-// Shared utilities for mdtest
+// Shared utilities for mdspec
 
 /**
  * ANSI escape code pattern for stripping.

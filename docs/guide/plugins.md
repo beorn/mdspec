@@ -13,7 +13,7 @@ By default, mdtest executes console blocks by spawning bash subprocesses for eac
 A plugin is a TypeScript module that exports a factory function:
 
 ```typescript
-import type { Plugin, FileOpts, BlockOpts, ReplResult } from "@beorn/mdtest/types"
+import type { Plugin, FileOpts, BlockOpts, ReplResult } from "@bearly/mdtest/types"
 
 export default function myPlugin(fileOpts: FileOpts): Plugin {
   // File-level initialization
@@ -122,7 +122,7 @@ Priority: **frontmatter** → **heading** → **fence** (later overrides earlier
 The default `bash` plugin extracts mdtest's current bash execution logic:
 
 ```typescript
-import { bash } from "@beorn/mdtest/plugins/bash"
+import { bash } from "@bearly/mdtest/plugins/bash"
 
 export default function myPlugin(opts: FileOpts): Plugin {
   // Use bash for mixed commands
@@ -151,7 +151,7 @@ Real-world example from the km project:
 ```typescript
 // apps/km-cli/tests/mdtest-plugin.ts
 import { $ } from "bun"
-import type { Plugin, FileOpts, BlockOpts, ReplResult } from "@beorn/mdtest/types"
+import type { Plugin, FileOpts, BlockOpts, ReplResult } from "@bearly/mdtest/types"
 
 export default function kmPlugin(_opts: FileOpts): Plugin {
   return {

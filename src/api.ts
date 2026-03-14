@@ -16,7 +16,7 @@ export interface BlockOptions {
 }
 
 // Note: Programmatic API is not yet implemented.
-// Use the CLI (mdtest) or Bun integration (@beorn/mdtest/bun) instead.
+// Use the CLI (mdtest) or Bun integration (@bearly/mdtest/bun) instead.
 // See README.md for usage.
 
 export interface CommandResult {

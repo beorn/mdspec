@@ -2,7 +2,7 @@
 // Usage: Create a wrapper test file that calls registerMdTests()
 //
 // Example: tests/md.test.ts
-// import { registerMdTests } from '@beorn/mdtest/bun'
+// import { registerMdTests } from '@bearly/mdtest/bun'
 // await registerMdTests('tests/e2e/**/*.test.md')
 
 import { test, describe, beforeAll, afterAll, beforeEach, afterEach } from "bun:test"

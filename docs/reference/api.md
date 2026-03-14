@@ -7,7 +7,7 @@ mdtest exports its core types for plugin authors and integrations.
 ### Plugin Types
 
 ```typescript
-import type { Plugin, FileOpts, BlockOpts, ReplResult, ExecFn, PluginFactory } from "@beorn/mdtest/types"
+import type { Plugin, FileOpts, BlockOpts, ReplResult, ExecFn, PluginFactory } from "@bearly/mdtest/types"
 ```
 
 #### `ReplResult`
@@ -89,7 +89,7 @@ type PluginFactory = (opts: FileOpts) => Plugin | Promise<Plugin>
 ### API Types
 
 ```typescript
-import type { BlockOptions, CommandResult, HeadingResult, FileResult } from "@beorn/mdtest/api"
+import type { BlockOptions, CommandResult, HeadingResult, FileResult } from "@bearly/mdtest/api"
 ```
 
 #### `BlockOptions`
@@ -166,21 +166,21 @@ interface FileResult {
 ### Vitest
 
 ```typescript
-import { registerMdTests } from "@beorn/mdtest/vitest"
+import { registerMdTests } from "@bearly/mdtest/vitest"
 await registerMdTests("tests/**/*.test.md")
 ```
 
 ### Bun
 
 ```typescript
-import { registerMdTests } from "@beorn/mdtest/bun"
+import { registerMdTests } from "@bearly/mdtest/bun"
 await registerMdTests("tests/**/*.test.md")
 ```
 
 ### Single File Registration
 
 ```typescript
-import { registerMdTestFile } from "@beorn/mdtest/vitest"
+import { registerMdTestFile } from "@bearly/mdtest/vitest"
 await registerMdTestFile("tests/specific.test.md")
 ```
 
@@ -191,5 +191,5 @@ await registerMdTestFile("tests/specific.test.md")
 The default bash plugin is available for composition:
 
 ```typescript
-import { bash } from "@beorn/mdtest/plugins/bash"
+import { bash } from "@bearly/mdtest/plugins/bash"
 ```

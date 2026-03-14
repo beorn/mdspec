@@ -1,5 +1,5 @@
 {
-  "name": "@beorn/mdtest",
+  "name": "@bearly/mdtest",
   "version": "0.3.0",
   "description": "Markdown test runner for CLI docs and shell transcripts. Cram-style console blocks, persistent shell context, pattern matching, and snapshot updates for Bun.",
   "keywords": [

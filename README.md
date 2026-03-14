@@ -18,7 +18,7 @@ Your docs are your tests. Persistent context, pattern matching, named captures, 
 Install:
 
 ```bash
-bun add -d @beorn/mdtest
+bun add -d @bearly/mdtest
 ```
 
 Write a test (`example.test.md`):
@@ -140,7 +140,7 @@ mdtest --tap tests/*.md       # TAP output
 
 ```typescript
 // tests/md.test.ts
-import { registerMdTests } from "@beorn/mdtest/vitest"
+import { registerMdTests } from "@bearly/mdtest/vitest"
 await registerMdTests("tests/**/*.test.md")
 ```
 

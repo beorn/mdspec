@@ -14,19 +14,19 @@
 ::: code-group
 
 ```bash [bun]
-bun add -d @beorn/mdtest
+bun add -d @bearly/mdtest
 ```
 
 ```bash [npm]
-npm install -D @beorn/mdtest
+npm install -D @bearly/mdtest
 ```
 
 ```bash [pnpm]
-pnpm add -D @beorn/mdtest
+pnpm add -D @bearly/mdtest
 ```
 
 ```bash [yarn]
-yarn add -D @beorn/mdtest
+yarn add -D @bearly/mdtest
 ```
 
 :::
@@ -84,7 +84,7 @@ Run markdown tests through Vitest alongside your TypeScript test suite.
 **Setup:** Create a test file (e.g., `tests/md.test.ts`):
 
 ```typescript
-import { registerMdTests } from "@beorn/mdtest/vitest"
+import { registerMdTests } from "@bearly/mdtest/vitest"
 await registerMdTests("tests/**/*.test.md")
 ```
 

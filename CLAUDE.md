@@ -47,11 +47,11 @@ Integrations (src/integrations/)
 ## Subpath Exports
 
 ```typescript
-import { registerMdTests } from "@beorn/mdtest/vitest" // Vitest integration
-import { registerMdTests } from "@beorn/mdtest/bun" // Bun integration
-import { parseBlock, matchLines } from "@beorn/mdtest/core" // Core parsing/matching
-import { shellEscape } from "@beorn/mdtest/shell" // Shell utilities
-import type { Plugin, FileOpts, BlockOpts, ReplResult } from "@beorn/mdtest/types" // Plugin types
+import { registerMdTests } from "@bearly/mdtest/vitest" // Vitest integration
+import { registerMdTests } from "@bearly/mdtest/bun" // Bun integration
+import { parseBlock, matchLines } from "@bearly/mdtest/core" // Core parsing/matching
+import { shellEscape } from "@bearly/mdtest/shell" // Shell utilities
+import type { Plugin, FileOpts, BlockOpts, ReplResult } from "@bearly/mdtest/types" // Plugin types
 ```
 
 ## Code Style

@@ -21,10 +21,50 @@
  * The REPL must emit these sequences when TERM_SHELL_INTEGRATION=1 is set.
  */
 
-import type { Subprocess } from "bun"
 import type { ShellResult } from "./shell.js"
 import { buildSessionPrelude } from "./shell.js"
 import { DEFAULTS, OSC_133_A_PATTERN, OSC_133_D_PATTERN, OSC_133_ANY_PATTERN } from "./constants.js"
+import { sleep, spawnProcess, type SpawnedProcess } from "./spawn.js"
+
+const decoder = new TextDecoder()
+
+/** Read from either a web ReadableStream or a Node.js stream, calling onChunk for each piece */
+function readStream(
+  stream: ReadableStream<Uint8Array> | NodeJS.ReadableStream,
+  onChunk: (text: string) => void,
+): Promise<void> {
+  // Web ReadableStream (Bun)
+  if ("getReader" in stream && typeof stream.getReader === "function") {
+    const reader = (stream as ReadableStream<Uint8Array>).getReader()
+    return (async () => {
+      try {
+        while (true) {
+          const { value, done } = await reader.read()
+          if (done) break
+          if (value) onChunk(decoder.decode(value))
+        }
+      } catch {
+        // Stream closed or error - ignore during cleanup
+      } finally {
+        try {
+          reader.releaseLock()
+        } catch {
+          // Ignore
+        }
+      }
+    })()
+  }
+
+  // Node.js Readable stream
+  return new Promise<void>((resolve) => {
+    const nodeStream = stream as NodeJS.ReadableStream
+    nodeStream.on("data", (chunk: Buffer | string) => {
+      onChunk(typeof chunk === "string" ? chunk : chunk.toString())
+    })
+    nodeStream.on("end", resolve)
+    nodeStream.on("error", () => resolve())
+  })
+}
 
 export interface CmdSessionOpts {
   cwd?: string
@@ -40,8 +80,7 @@ export interface CmdSessionOpts {
 }
 
 export class CmdSession {
-  // Use explicit type for subprocess with piped stdin/stdout/stderr
-  private proc: Subprocess<"pipe", "pipe", "pipe">
+  private proc: SpawnedProcess
   private stdoutBuffer: string = ""
   private stderrBuffer: string = ""
   private minWait: number
@@ -68,10 +107,7 @@ export class CmdSession {
       funcFile: opts.funcFile,
     })
 
-    this.proc = Bun.spawn(["bash", "-c", wrapperScript], {
-      stdin: "pipe",
-      stdout: "pipe",
-      stderr: "pipe",
+    this.proc = spawnProcess(["bash", "-c", wrapperScript], {
       cwd: opts.cwd,
       env: {
         ...process.env,
@@ -88,51 +124,12 @@ export class CmdSession {
   }
 
   private startReaders(): void {
-    // Background reader for stdout using Bun's ReadableStream
-    this.stdoutReader = (async () => {
-      const stream = this.proc.stdout
-      const reader = stream.getReader()
-      try {
-        while (!this.closed) {
-          const { value, done } = await reader.read()
-          if (done) break
-          if (value) {
-            this.stdoutBuffer += new TextDecoder().decode(value)
-          }
-        }
-      } catch {
-        // Stream closed or error - ignore during cleanup
-      } finally {
-        try {
-          reader.releaseLock()
-        } catch {
-          // Ignore
-        }
-      }
-    })()
-
-    // Background reader for stderr using Bun's ReadableStream
-    this.stderrReader = (async () => {
-      const stream = this.proc.stderr
-      const reader = stream.getReader()
-      try {
-        while (!this.closed) {
-          const { value, done } = await reader.read()
-          if (done) break
-          if (value) {
-            this.stderrBuffer += new TextDecoder().decode(value)
-          }
-        }
-      } catch {
-        // Stream closed or error - ignore during cleanup
-      } finally {
-        try {
-          reader.releaseLock()
-        } catch {
-          // Ignore
-        }
-      }
-    })()
+    this.stdoutReader = readStream(this.proc.stdout, (chunk) => {
+      this.stdoutBuffer += chunk
+    })
+    this.stderrReader = readStream(this.proc.stderr, (chunk) => {
+      this.stderrBuffer += chunk
+    })
   }
 
   /**
@@ -157,7 +154,7 @@ export class CmdSession {
         return
       }
 
-      await Bun.sleep(10)
+      await sleep(10)
     }
   }
 
@@ -176,7 +173,7 @@ export class CmdSession {
         await this.waitForReady()
       } else if (this.startupDelay > 0) {
         // For non-OSC 133 mode, use fixed delay
-        await Bun.sleep(this.startupDelay)
+        await sleep(this.startupDelay)
       }
       this.firstExecute = false
     }
@@ -190,10 +187,9 @@ export class CmdSession {
 
     // Write command to stdin using Bun's FileSink
     // FileSink has write() method that accepts strings or Uint8Array
-    // Note: write() and flush() return promises but we intentionally fire-and-forget
-    // as the timeout-based read loop will handle waiting for output
-    void this.proc.stdin.write(command + "\n")
-    void this.proc.stdin.flush()
+    // Write command to stdin - fire-and-forget as the timeout-based read loop handles waiting
+    this.proc.stdin.write(command + "\n")
+    this.proc.stdin.flush?.()
 
     // Wait for output with timeout logic
     const startTime = Date.now()
@@ -241,7 +237,7 @@ export class CmdSession {
       }
 
       // Small sleep to avoid busy-waiting
-      await Bun.sleep(10)
+      await sleep(10)
     }
 
     // Strip OSC 133 sequences from output (always strip when useOsc133 is enabled)
@@ -267,8 +263,8 @@ export class CmdSession {
     this.closed = true
 
     try {
-      // Close stdin to signal EOF (returns a number, not a promise)
-      void this.proc.stdin.end()
+      // Close stdin to signal EOF
+      this.proc.stdin.end()
 
       // Wait for process to exit with timeout
       const exitPromise = this.proc.exited

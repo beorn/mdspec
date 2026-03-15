@@ -6,7 +6,7 @@ import { tmpdir } from "node:os"
 import { dirname, join } from "node:path"
 import { splitNorm, trimTrailingEmptyLines } from "../core.js"
 import { buildScript, buildHookScript } from "../shell.js"
-import { bunShell } from "../integrations/bun.js"
+import { portableShell } from "../spawn.js"
 import { DEFAULTS } from "../constants.js"
 import type { Plugin, FileOpts, BlockOpts, ExecFn, ReplResult } from "../types.js"
 import type { ShellResult, ShellOptions } from "../shell.js"
@@ -25,7 +25,7 @@ export interface BashPluginOptions {
  * Uses stateful bash execution with env/cwd/function persistence
  */
 export function bash(opts: FileOpts, pluginOpts?: BashPluginOptions): Plugin {
-  const shell: ShellFn = pluginOpts?.shellFn ?? bunShell
+  const shell: ShellFn = pluginOpts?.shellFn ?? portableShell
 
   // Create temp directory for state files
   const stateDir = mkdtempSync(join(tmpdir(), "mdspec-"))

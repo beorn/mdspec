@@ -1,6 +1,6 @@
 # mdspec
 
-Bun-native Cram-style markdown testing. Write CLI commands and expected output in `console` code fences — mdspec runs them with persistent shell context, pattern matching, and snapshot updates.
+Cram-style markdown testing for Bun and Node.js. Write CLI commands and expected output in `console` code fences — mdspec runs them with persistent shell context, pattern matching, and snapshot updates.
 
 ## Commands
 
@@ -37,6 +37,7 @@ Integrations (src/integrations/)
 | `src/index.ts`                      | CLI entry point                            |
 | `src/core.ts`                       | Pure functions: parsing, pattern matching  |
 | `src/markdown.ts`                   | Markdown parsing, fence extraction         |
+| `src/spawn.ts`                      | Runtime-detecting spawn (Bun/Node.js)      |
 | `src/plugin-executor.ts`            | Plugin-based block execution               |
 | `src/plugins/bash.ts`               | Default bash plugin with state persistence |
 | `src/integrations/shared.ts`        | Common test registration (Bun + Vitest)    |

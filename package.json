@@ -1,7 +1,7 @@
 {
   "name": "mdspec",
   "version": "0.3.2",
-  "description": "Markdown test runner for CLI docs and shell transcripts. Cram-style console blocks, persistent shell context, pattern matching, and snapshot updates for Bun.",
+  "description": "Markdown test runner for CLI docs and shell transcripts. Cram-style console blocks, persistent shell context, pattern matching, and snapshot updates.",
   "keywords": [
     "bash",
     "bun",
@@ -11,6 +11,7 @@
     "doctest",
     "markdown",
     "markdown-testing",
+    "nodejs",
     "shell",
     "snapshot-testing",
     "testing",
@@ -78,6 +79,15 @@
     "vitest": "^3.0.0"
   },
   "engines": {
-    "bun": ">=1.0.0"
+    "bun": ">=1.0.0",
+    "node": ">=18"
+  },
+  "peerDependencies": {
+    "node-pty": ">=1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "node-pty": {
+      "optional": true
+    }
   }
 }

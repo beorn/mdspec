@@ -6,6 +6,8 @@
 
 ## Quick Start
 
+**Requires Bun >=1.0 or Node.js >=18.** PTY testing (`cmd=` attribute) on Node.js requires [`node-pty`](https://www.npmjs.com/package/node-pty).
+
 ```bash
 bun add -d mdspec
 ```
@@ -121,14 +123,14 @@ Most CLI testing tools were built for a specific language ecosystem or require c
 
 **Integrated, not standalone.** mdspec runs inside Vitest or Bun's test runner with the same config, reporters, and CI you already have. No separate tool to install, no parallel test pipeline to maintain.
 
-| | mdspec | [Cram](https://bitheap.org/cram/) | [trycmd](https://github.com/assert-rs/trycmd) | [shelltestrunner](https://github.com/simonmichael/shelltestrunner) | [doctest](https://docs.python.org/3/library/doctest.html) |
-|---|---|---|---|---|---|
-| Ecosystem | JS/TS (Bun) | Python | Rust | Haskell | Python |
-| Format | Markdown | `.t` files | TOML + `.md` | Custom | Docstrings |
-| In-process | Plugins | No | No | No | Yes |
-| Test runner | Vitest, Bun | Standalone | cargo test | Standalone | unittest |
-| Persistent context | Across fences | Per block | Per file | No | No |
-| Named captures | Yes | No | No | No | No |
+|                    | mdspec        | [Cram](https://bitheap.org/cram/) | [trycmd](https://github.com/assert-rs/trycmd) | [shelltestrunner](https://github.com/simonmichael/shelltestrunner) | [doctest](https://docs.python.org/3/library/doctest.html) |
+| ------------------ | ------------- | --------------------------------- | --------------------------------------------- | ------------------------------------------------------------------ | --------------------------------------------------------- |
+| Ecosystem          | JS/TS         | Python                            | Rust                                          | Haskell                                                            | Python                                                    |
+| Format             | Markdown      | `.t` files                        | TOML + `.md`                                  | Custom                                                             | Docstrings                                                |
+| In-process         | Plugins       | No                                | No                                            | No                                                                 | Yes                                                       |
+| Test runner        | Vitest, Bun   | Standalone                        | cargo test                                    | Standalone                                                         | unittest                                                  |
+| Persistent context | Across fences | Per block                         | Per file                                      | No                                                                 | No                                                        |
+| Named captures     | Yes           | No                                | No                                            | No                                                                 | No                                                        |
 
 ## Documentation
 

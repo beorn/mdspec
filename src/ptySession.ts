@@ -17,6 +17,7 @@
 import type { ShellResult } from "./shell.js"
 import { buildSessionPrelude } from "./shell.js"
 import { DEFAULTS, OSC_133_A_PATTERN, OSC_133_D_PATTERN, OSC_133_ANY_PATTERN } from "./constants.js"
+import { sleep, spawnPty, type PtyProcess } from "./spawn.js"
 // Strip ANSI escape codes (colors, cursor movement, clearing, etc.)
 // Common codes: m=color, G=cursor column, J=clear, K=erase, H=position, A-D=move
 const ANSI_ESCAPE_PATTERN = /\x1b\[[0-9;]*[A-Za-z]/g
@@ -44,11 +45,7 @@ export class PtySession {
   private stripAnsi: boolean
   private firstExecute = true
   private closed = false
-  private proc: ReturnType<typeof Bun.spawn> | null = null
-  private terminal: {
-    write: (data: string) => void
-    close: () => void
-  } | null = null
+  private pty: PtyProcess | null = null
 
   constructor(cmd: string, opts: PtySessionOpts = {}) {
     this.minWait = opts.minWait ?? DEFAULTS.PTY_SESSION.MIN_WAIT
@@ -63,20 +60,15 @@ export class PtySession {
       funcFile: opts.funcFile,
     })
 
-    this.proc = Bun.spawn(["bash", "-c", wrapperScript], {
+    this.pty = spawnPty(["bash", "-c", wrapperScript], {
       cwd: opts.cwd,
       env: { ...process.env, ...opts.env },
-      terminal: {
-        cols: opts.cols ?? 80,
-        rows: opts.rows ?? 24,
-        data: (_terminal, data) => {
-          this.outputBuffer += data.toString()
-        },
+      cols: opts.cols ?? 80,
+      rows: opts.rows ?? 24,
+      onData: (data) => {
+        this.outputBuffer += data
       },
     })
-
-    // @ts-expect-error - terminal is added by Bun when terminal option is used
-    this.terminal = this.proc.terminal
   }
 
   /**
@@ -100,7 +92,7 @@ export class PtySession {
       // Check for any output - subprocess has started
       if (this.outputBuffer.length > 0) {
         // Wait a tiny bit more to let any OSC 133;A arrive
-        await Bun.sleep(20)
+        await sleep(20)
         // Clear buffer - ready to proceed
         this.outputBuffer = ""
         return
@@ -113,7 +105,7 @@ export class PtySession {
         return
       }
 
-      await Bun.sleep(10)
+      await sleep(10)
     }
   }
 
@@ -128,18 +120,18 @@ export class PtySession {
     this.firstExecute = false
 
     // Check if terminal is still alive
-    if (this.closed || !this.terminal) {
+    if (this.closed || !this.pty) {
       throw new Error(
-        `Terminal is closed (exit code: ${this.proc?.exitCode ?? "unknown"}, stdout so far: ${this.outputBuffer.slice(0, 200)})`,
+        `Terminal is closed (exit code: ${this.pty?.exitCode ?? "unknown"}, stdout so far: ${this.outputBuffer.slice(0, 200)})`,
       )
     }
 
     // Write command to PTY (may throw if process exited)
     try {
-      this.terminal.write(command + "\n")
+      this.pty.write(command + "\n")
     } catch (e) {
       throw new Error(
-        `Failed to write to terminal (exit code: ${this.proc?.exitCode ?? "unknown"}, stdout so far: ${this.outputBuffer.slice(0, 500)}): ${String(e)}`,
+        `Failed to write to terminal (exit code: ${this.pty?.exitCode ?? "unknown"}, stdout so far: ${this.outputBuffer.slice(0, 500)}): ${String(e)}`,
       )
     }
 
@@ -177,7 +169,7 @@ export class PtySession {
         break
       }
 
-      await Bun.sleep(10)
+      await sleep(10)
     }
 
     // Process output
@@ -216,15 +208,15 @@ export class PtySession {
     this.closed = true
 
     try {
-      this.terminal?.close()
-      if (this.proc) {
+      this.pty?.close()
+      if (this.pty) {
         await Promise.race([
-          this.proc.exited,
+          this.pty.exited,
           new Promise<void>((resolve) => {
             setTimeout(resolve, 1000)
           }),
         ])
-        this.proc.kill()
+        this.pty.kill()
       }
     } catch {
       // Ignore cleanup errors
@@ -232,7 +224,7 @@ export class PtySession {
   }
 
   get isRunning(): boolean {
-    return !this.closed && this.proc?.exitCode === null
+    return !this.closed && this.pty?.exitCode === null
   }
 
   async [Symbol.asyncDispose](): Promise<void> {

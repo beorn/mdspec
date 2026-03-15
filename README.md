@@ -1,6 +1,6 @@
 # mdspec
 
-***Executable Markdown Testing.***
+**_Executable Markdown Testing._**
 
 **Your docs are your tests. Write CLI commands and expected output in markdown code fences — mdspec runs them with persistent shell context, pattern matching, and snapshot updates.**
 
@@ -11,6 +11,7 @@
 Testing CLI tools shouldn't require a separate testing DSL. Your README already shows commands and their output — mdspec makes those examples executable. When your docs drift from reality, your tests fail.
 
 **Design goals:**
+
 - **Docs as tests** — no separate test files, no custom syntax. Standard markdown with console code fences.
 - **Persistent context** — environment variables, working directory, and shell state carry across blocks within a file, just like a real terminal session.
 - **Pattern matching** — wildcards, regex, and named captures for dynamic output (timestamps, UUIDs, paths).
@@ -22,13 +23,13 @@ Testing CLI tools shouldn't require a separate testing DSL. Your README already 
 
 mdspec draws inspiration from and improves upon:
 
-| Project | Language | How mdspec differs |
-|---------|----------|-------------------|
-| [Cram](https://bitheap.org/cram/) | Python | Markdown-native (not `.t` files), persistent context across blocks, plugin system, test runner integration |
-| [trycmd](https://github.com/assert-rs/trycmd) | Rust | Not Rust-specific, supports regex/captures, REPL testing, in-process plugins |
-| [mdbook-cmdrun](https://github.com/FauconFan/mdbook-cmdrun) | Rust | Bidirectional (asserts output, not just generates it), snapshot updates, pattern matching |
-| [doctest](https://docs.python.org/3/library/doctest.html) | Python | Shell commands (not Python expressions), cross-language, persistent state |
-| [shelltestrunner](https://github.com/simonmichael/shelltestrunner) | Haskell | Standard markdown format, captures, plugins, integrated with JS test runners |
+| Project                                                            | Language | How mdspec differs                                                                                         |
+| ------------------------------------------------------------------ | -------- | ---------------------------------------------------------------------------------------------------------- |
+| [Cram](https://bitheap.org/cram/)                                  | Python   | Markdown-native (not `.t` files), persistent context across blocks, plugin system, test runner integration |
+| [trycmd](https://github.com/assert-rs/trycmd)                      | Rust     | Not Rust-specific, supports regex/captures, REPL testing, in-process plugins                               |
+| [mdbook-cmdrun](https://github.com/FauconFan/mdbook-cmdrun)        | Rust     | Bidirectional (asserts output, not just generates it), snapshot updates, pattern matching                  |
+| [doctest](https://docs.python.org/3/library/doctest.html)          | Python   | Shell commands (not Python expressions), cross-language, persistent state                                  |
+| [shelltestrunner](https://github.com/simonmichael/shelltestrunner) | Haskell  | Standard markdown format, captures, plugins, integrated with JS test runners                               |
 
 ## Requirements
 

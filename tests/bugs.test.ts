@@ -44,7 +44,7 @@ describe("session exit code when OSC 133 unavailable", () => {
     }
   })
 
-  test("CmdSession with OSC 133 and maxWait timeout returns null exit code", async () => {
+  test("CmdSession with OSC 133 and maxWait timeout returns null exit code", { timeout: 15_000 }, async () => {
     // When OSC 133 is enabled but no marker received, exit code is null
     // Note: waitForReady() uses Math.max(maxWait, 5000) for startup
     const session = new CmdSession("cat", {
@@ -59,7 +59,7 @@ describe("session exit code when OSC 133 unavailable", () => {
     } finally {
       await session.close()
     }
-  }, 15000)
+  })
 
   test.skipIf(isWindows)("PtySession returns null exitCode on silence-based fallback", async () => {
     // cat doesn't emit OSC 133;D — falls back to silence detection

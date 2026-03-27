@@ -82,7 +82,6 @@ import { join, dirname, isAbsolute } from "node:path"
 import { fileURLToPath } from "node:url"
 import { glob } from "glob"
 import { Command } from "@silvery/commander"
-import { colorizeHelp } from "@silvery/commander"
 import { parseInfo, parseBlock, matchLines, hasPatterns, hintMismatch } from "./core.js"
 import { parseMarkdown, findNearestHeading, generateTestId } from "./markdown.js"
 import { PluginExecutor } from "./plugin-executor.js"
@@ -112,7 +111,6 @@ const program = new Command()
   .option("--tap", "TAP reporter - output Test Anything Protocol format", false)
   .showHelpAfterError("(add --help for additional information)")
 
-colorizeHelp(program)
 program.parse()
 
 const opts = program.opts()

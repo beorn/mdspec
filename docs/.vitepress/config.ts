@@ -6,7 +6,14 @@ export default defineConfig({
   base: "/mdspec/",
   head: [
     ["link", { rel: "icon", type: "image/svg+xml", href: "/mdspec/favicon.svg" }],
-    ["script", { defer: "", src: "https://static.cloudflareinsights.com/beacon.min.js", "data-cf-beacon": '{"token": "d9b13df1eca0424c884faea71f34e09f"}' }],
+    [
+      "script",
+      {
+        defer: "",
+        src: "https://static.cloudflareinsights.com/beacon.min.js",
+        "data-cf-beacon": '{"token": "d9b13df1eca0424c884faea71f34e09f"}',
+      },
+    ],
   ],
   themeConfig: {
     nav: [

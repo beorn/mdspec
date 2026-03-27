@@ -81,7 +81,8 @@ import { tmpdir } from "node:os"
 import { join, dirname, isAbsolute } from "node:path"
 import { fileURLToPath } from "node:url"
 import { glob } from "glob"
-import { Command } from "@commander-js/extra-typings"
+import { Command } from "@silvery/commander"
+import { colorizeHelp } from "@silvery/commander"
 import { parseInfo, parseBlock, matchLines, hasPatterns, hintMismatch } from "./core.js"
 import { parseMarkdown, findNearestHeading, generateTestId } from "./markdown.js"
 import { PluginExecutor } from "./plugin-executor.js"
@@ -110,7 +111,9 @@ const program = new Command()
   .option("--dots", "Dots reporter - show dots for passing tests, details only for failures", false)
   .option("--tap", "TAP reporter - output Test Anything Protocol format", false)
   .showHelpAfterError("(add --help for additional information)")
-  .parse()
+
+colorizeHelp(program)
+program.parse()
 
 const opts = program.opts()
 const patterns = program.args

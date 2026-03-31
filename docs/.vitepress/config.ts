@@ -74,7 +74,10 @@ export default defineConfig({
       },
     ],
     socialLinks: [{ icon: "github", link: "https://github.com/beorn/mdspec" }],
-    footer: { message: "Released under the MIT License." },
+    footer: {
+      message: 'Used by <a href="https://silvery.dev">Silvery</a> and <a href="https://termless.dev">Termless</a> for executable documentation',
+      copyright: 'Built by <a href="https://beorn.codes">Bjorn Stabell</a>'
+    },
     search: { provider: "local" },
   },
 })

@@ -45,7 +45,7 @@ export async function loadPlugin(specifier: string, testFilePath: string): Promi
     }
     // Lazy loaders are zero-arg functions; PluginFactory takes 1+ args (FileOpts)
     if (typeof entry === "function" && entry.length === 0) {
-      return await (entry as () => Promise<PluginFactory>)()
+      return (entry as () => Promise<PluginFactory>)()
     }
     return entry as PluginFactory
   }

@@ -144,32 +144,32 @@ Features:
 - Continuation lines (`>`)
 - Reset flag support
 
-## Example: km CLI Plugin
+## Example: Custom CLI Plugin
 
-Real-world example from the km project:
+Real-world example of a plugin that intercepts commands for a specific CLI tool:
 
 ```typescript
-// apps/km-cli/tests/mdspec-plugin.ts
+// tests/my-cli-plugin.ts
 import { $ } from "bun"
 import type { Plugin, FileOpts, BlockOpts, ReplResult } from "mdspec/types"
 
-export default function kmPlugin(_opts: FileOpts): Plugin {
+export default function myCliPlugin(_opts: FileOpts): Plugin {
   return {
     block(blockOpts: BlockOpts) {
-      // Only handle console blocks with km commands
+      // Only handle console blocks with mycli commands
       if (blockOpts.type !== "console") return null
 
       const commands = extractCommands(blockOpts.content)
-      const hasKmCommands = commands.some((c) => c.startsWith("km "))
-      const hasOtherCommands = commands.some((c) => !c.startsWith("km "))
+      const hasMyCommands = commands.some((c) => c.startsWith("mycli "))
+      const hasOtherCommands = commands.some((c) => !c.startsWith("mycli "))
 
-      // Only handle pure km command blocks
-      if (!hasKmCommands || hasOtherCommands) return null
+      // Only handle pure mycli command blocks
+      if (!hasMyCommands || hasOtherCommands) return null
 
       // Return executor using bunShell
       return async (cmd: string): Promise<ReplResult> => {
-        const kmPath = `${process.env.ROOT}/apps/km-cli/src/index.ts`
-        const result = await $\`bash -c ${setupKmFunction(kmPath)} && ${cmd}\`\`.quiet()
+        const cliPath = `${process.env.ROOT}/src/cli/index.ts`
+        const result = await $\`bash -c ${setupCliFunction(cliPath)} && ${cmd}\`\`.quiet()
 
         return {
           stdout: result.stdout.toString().trimEnd(),
@@ -187,16 +187,16 @@ Usage in test file:
 ```markdown
 ---
 mdspec:
-  plugin: ../apps/km-cli/tests/mdspec-plugin.ts
+  plugin: ./tests/my-cli-plugin.ts
 ---
 
-# KM CLI Tests
+# CLI Tests
 
 \`\`\`console
-$ km init .
-Created .km directory
+$ mycli init .
+Created .mycli directory
 
-$ km list
+$ mycli list
 inbox.md
 \`\`\`
 ```

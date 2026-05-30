@@ -1,6 +1,6 @@
 {
   "name": "mdspec",
-  "version": "0.3.5",
+  "version": "0.4.0",
   "description": "Markdown test runner for CLI docs and shell transcripts. Cram-style console blocks, persistent shell context, pattern matching, and snapshot updates.",
   "keywords": [
     "bash",
@@ -28,30 +28,67 @@
     "url": "https://github.com/beorn/mdspec.git"
   },
   "bin": {
-    "mdspec": "./src/index.ts"
+    "mdspec": "./dist/index.mjs"
   },
   "files": [
-    "src"
+    "dist"
   ],
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
-    "./api": "./src/api.ts",
-    "./bun": "./src/integrations/bun.ts",
-    "./vitest": "./src/integrations/vitest.ts",
-    "./vitest-plugin": "./src/integrations/vitest-plugin.ts",
-    "./types": "./src/types.ts",
-    "./shell": "./src/shell.ts",
-    "./core": "./src/core.ts",
-    "./constants": "./src/constants.ts",
-    "./cmdSession": "./src/cmdSession.ts",
-    "./plugins/bash": "./src/plugins/bash.ts",
-    "./plugins/tape": "./src/plugins/tape.ts"
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    },
+    "./api": {
+      "types": "./dist/api.d.mts",
+      "import": "./dist/api.mjs"
+    },
+    "./bun": {
+      "types": "./dist/integrations/bun.d.mts",
+      "import": "./dist/integrations/bun.mjs"
+    },
+    "./vitest": {
+      "types": "./dist/integrations/vitest.d.mts",
+      "import": "./dist/integrations/vitest.mjs"
+    },
+    "./vitest-plugin": {
+      "types": "./dist/integrations/vitest-plugin.d.mts",
+      "import": "./dist/integrations/vitest-plugin.mjs"
+    },
+    "./types": {
+      "types": "./dist/types.d.mts",
+      "import": "./dist/types.mjs"
+    },
+    "./shell": {
+      "types": "./dist/shell.d.mts",
+      "import": "./dist/shell.mjs"
+    },
+    "./core": {
+      "types": "./dist/core.d.mts",
+      "import": "./dist/core.mjs"
+    },
+    "./constants": {
+      "types": "./dist/constants.d.mts",
+      "import": "./dist/constants.mjs"
+    },
+    "./cmdSession": {
+      "types": "./dist/cmdSession.d.mts",
+      "import": "./dist/cmdSession.mjs"
+    },
+    "./plugins/bash": {
+      "types": "./dist/plugins/bash.d.mts",
+      "import": "./dist/plugins/bash.mjs"
+    },
+    "./plugins/tape": {
+      "types": "./dist/plugins/tape.d.mts",
+      "import": "./dist/plugins/tape.mjs"
+    }
   },
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
+    "build": "tsdown",
     "test": "bun src/index.ts tests/example.spec.md tests/features.spec.md",
     "typecheck": "tsc --noEmit",
     "ci": "bun run typecheck && bun test",
@@ -61,22 +98,23 @@
     "prepare": "git config core.hooksPath .githooks 2>/dev/null || true"
   },
   "dependencies": {
+    "@silvery/commander": "^0.21.0",
     "debug": "^4.4.3",
     "github-slugger": "^2.0.0",
     "glob": "^11.0.0",
+    "loggily": "^0.10.0",
     "mdast-util-to-string": "^4.0.0",
     "remark-parse": "^11.0.0",
     "unified": "^11.0.5"
   },
   "devDependencies": {
     "@bearly/vitepress-enrich": "^0.3.0",
-    "@silvery/commander": "^0.21.0",
     "@types/bun": "^1.3.12",
     "@types/debug": "^4.1.13",
     "@types/mdast": "^4.0.4",
     "@types/node": "^25.6.0",
     "commander": "^14.0.3",
-    "loggily": "^0.10.0",
+    "tsdown": "^0.21.7",
     "typescript": "latest",
     "vite": "^6.0.0",
     "vitepress": "^1.6.4",
@@ -87,7 +125,9 @@
   "peerDependencies": {
     "@termless/core": ">=0.3.0",
     "@termless/vt100": ">=0.3.0",
-    "node-pty": ">=1.0.0"
+    "node-pty": ">=1.0.0",
+    "vite": ">=5.0.0",
+    "vitest": ">=3.0.0"
   },
   "peerDependenciesMeta": {
     "node-pty": {
@@ -98,7 +138,47 @@
     },
     "@termless/vt100": {
       "optional": true
+    },
+    "vite": {
+      "optional": true
+    },
+    "vitest": {
+      "optional": true
     }
+  },
+  "tsdown": {
+    "clean": true,
+    "dts": true,
+    "entry": [
+      "src/index.ts",
+      "src/api.ts",
+      "src/integrations/bun.ts",
+      "src/integrations/vitest.ts",
+      "src/integrations/vitest-plugin.ts",
+      "src/types.ts",
+      "src/shell.ts",
+      "src/core.ts",
+      "src/constants.ts",
+      "src/cmdSession.ts",
+      "src/plugins/bash.ts",
+      "src/plugins/tape.ts"
+    ],
+    "deps": {
+      "neverBundle": [
+        "@silvery/commander",
+        "bun:test",
+        "debug",
+        "github-slugger",
+        "glob",
+        "loggily",
+        "mdast-util-to-string",
+        "remark-parse",
+        "unified",
+        "vite",
+        "vitest"
+      ]
+    },
+    "format": "esm"
   },
   "engines": {
     "bun": ">=1.0.0",

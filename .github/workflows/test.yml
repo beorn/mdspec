@@ -26,5 +26,5 @@ jobs:
         run: bun run typecheck
 
       - name: Run tests
-        run: bun test
+        run: bun run test
         continue-on-error: true # Pre-existing OSC 133 timing failures in CI

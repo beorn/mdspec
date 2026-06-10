@@ -52,9 +52,9 @@
     "access": "public"
   },
   "scripts": {
-    "test": "bun src/index.ts tests/example.spec.md tests/features.spec.md",
+    "test": "bunx --bun vitest run",
     "typecheck": "tsc --noEmit",
-    "ci": "bun run typecheck && bun test",
+    "ci": "bun run typecheck && bun run test",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",

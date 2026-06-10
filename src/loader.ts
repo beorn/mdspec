@@ -32,7 +32,7 @@ export const PLUGIN_LANGUAGES: Record<string, string[]> = {
  * 2. Relative paths (resolve from test file dir)
  * 3. Bare specifiers (use Bun's import resolution)
  *
- * @param specifier - Plugin specifier (e.g., 'bash', './plugin.ts', '@km/cli/mdspec')
+ * @param specifier - Plugin specifier (e.g., 'bash', './plugin.ts', '@scope/mdspec-plugin')
  * @param testFilePath - Absolute path to the .spec.md file (for relative resolution)
  * @returns Plugin factory function
  */

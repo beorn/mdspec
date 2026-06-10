@@ -91,7 +91,7 @@ await registerMdTests("tests/**/*.spec.md")
 **Run:**
 
 ```bash
-bunx vitest run tests/md.test.ts
+bunx --bun vitest run tests/md.test.ts
 ```
 
 This gives you Vitest's reporters, `--watch` mode, `--coverage`, and `--bail` integration.

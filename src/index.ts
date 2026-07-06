@@ -77,7 +77,7 @@
 // -----------------------------------------------------------------------------
 
 import { readFile, writeFile } from "node:fs/promises"
-import { mkdtempSync, writeFileSync, rmSync } from "node:fs"
+import { mkdtempSync, writeFileSync, rmSync, realpathSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join, dirname, isAbsolute } from "node:path"
 import { fileURLToPath } from "node:url"
@@ -112,7 +112,19 @@ const program = new Command()
   .option("--tap", "TAP reporter - output Test Anything Protocol format", false)
   .showHelpAfterError("(add --help for additional information)")
 
-program.parse()
+// Import-safe guard: parse argv + run ONLY when executed as a script (bin
+// shim or direct invocation). `import "mdspec"` must not parse the host
+// process's argv or exit — the root export doubles as the package main.
+const isDirectRun = (() => {
+  if (!process.argv[1]) return false
+  try {
+    return realpathSync(process.argv[1]) === fileURLToPath(import.meta.url)
+  } catch {
+    return false
+  }
+})()
+
+if (isDirectRun) program.parse()
 
 const opts = program.opts()
 const patterns = program.args
@@ -130,21 +142,23 @@ function maybeTrunc(line: string): string {
 
 // Expand glob patterns (handles both shell-expanded and quoted patterns)
 const files: string[] = []
-for (const pattern of patterns) {
-  const matches = await glob(pattern, { nodir: true })
-  if (matches.length === 0) {
-    // If no glob match, treat as literal file path (preserves shell behavior)
-    files.push(pattern)
-  } else files.push(...matches)
-}
+if (isDirectRun) {
+  for (const pattern of patterns) {
+    const matches = await glob(pattern, { nodir: true })
+    if (matches.length === 0) {
+      // If no glob match, treat as literal file path (preserves shell behavior)
+      files.push(pattern)
+    } else files.push(...matches)
+  }
 
-if (files.length === 0) {
-  console.error("Error: No test files found matching patterns:", patterns)
-  process.exit(2)
-}
+  if (files.length === 0) {
+    console.error("Error: No test files found matching patterns:", patterns)
+    process.exit(2)
+  }
 
-log.debug?.("Found %d test files", files.length)
-log.debug?.("Files: %O", files)
+  log.debug?.("Found %d test files", files.length)
+  log.debug?.("Files: %O", files)
+}
 
 // -------- Constants --------
 import { DEFAULTS } from "./constants.js"
@@ -568,7 +582,7 @@ async function main() {
   process.exit(ok ? 0 : 1)
 }
 
-void main()
+if (isDirectRun) void main()
 
 // -----------------------------------------------------------------------------
 // Future ideas (not implemented; keeping notes here):

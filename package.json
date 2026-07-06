@@ -143,7 +143,8 @@
   "peerDependencies": {
     "@termless/core": ">=0.3.0",
     "@termless/vt100": ">=0.3.0",
-    "node-pty": ">=1.0.0"
+    "node-pty": ">=1.0.0",
+    "vitest": ">=2.0.0"
   },
   "peerDependenciesMeta": {
     "node-pty": {
@@ -153,6 +154,9 @@
       "optional": true
     },
     "@termless/vt100": {
+      "optional": true
+    },
+    "vitest": {
       "optional": true
     }
   },

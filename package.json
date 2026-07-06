@@ -31,7 +31,7 @@
     "mdspec": "./src/index.ts"
   },
   "files": [
-    "src"
+    "dist"
   ],
   "type": "module",
   "exports": {
@@ -49,9 +49,63 @@
     "./plugins/tape": "./src/plugins/tape.ts"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "bin": {
+      "mdspec": "./dist/index.mjs"
+    },
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.mts",
+        "import": "./dist/index.mjs"
+      },
+      "./api": {
+        "types": "./dist/api.d.mts",
+        "import": "./dist/api.mjs"
+      },
+      "./bun": {
+        "types": "./dist/integrations/bun.d.mts",
+        "import": "./dist/integrations/bun.mjs"
+      },
+      "./vitest": {
+        "types": "./dist/integrations/vitest.d.mts",
+        "import": "./dist/integrations/vitest.mjs"
+      },
+      "./vitest-plugin": {
+        "types": "./dist/integrations/vitest-plugin.d.mts",
+        "import": "./dist/integrations/vitest-plugin.mjs"
+      },
+      "./types": {
+        "types": "./dist/types.d.mts",
+        "import": "./dist/types.mjs"
+      },
+      "./shell": {
+        "types": "./dist/shell.d.mts",
+        "import": "./dist/shell.mjs"
+      },
+      "./core": {
+        "types": "./dist/core.d.mts",
+        "import": "./dist/core.mjs"
+      },
+      "./constants": {
+        "types": "./dist/constants.d.mts",
+        "import": "./dist/constants.mjs"
+      },
+      "./cmdSession": {
+        "types": "./dist/cmdSession.d.mts",
+        "import": "./dist/cmdSession.mjs"
+      },
+      "./plugins/bash": {
+        "types": "./dist/plugins/bash.d.mts",
+        "import": "./dist/plugins/bash.mjs"
+      },
+      "./plugins/tape": {
+        "types": "./dist/plugins/tape.d.mts",
+        "import": "./dist/plugins/tape.mjs"
+      }
+    }
   },
   "scripts": {
+    "build": "tsdown",
     "test": "bunx --bun vitest run",
     "typecheck": "tsc --noEmit",
     "ci": "bun run typecheck && bun run test",
@@ -78,6 +132,7 @@
     "@types/node": "^25.6.0",
     "commander": "^14.0.3",
     "loggily": "^0.10.0",
+    "tsdown": "^0.21.7",
     "typescript": "latest",
     "vite": "^6.0.0",
     "vitepress": "^1.6.4",
@@ -88,7 +143,8 @@
   "peerDependencies": {
     "@termless/core": ">=0.3.0",
     "@termless/vt100": ">=0.3.0",
-    "node-pty": ">=1.0.0"
+    "node-pty": ">=1.0.0",
+    "vitest": ">=2.0.0"
   },
   "peerDependenciesMeta": {
     "node-pty": {
@@ -99,7 +155,36 @@
     },
     "@termless/vt100": {
       "optional": true
+    },
+    "vitest": {
+      "optional": true
     }
+  },
+  "tsdown": {
+    "clean": true,
+    "dts": true,
+    "entry": [
+      "src/index.ts",
+      "src/api.ts",
+      "src/integrations/bun.ts",
+      "src/integrations/vitest.ts",
+      "src/integrations/vitest-plugin.ts",
+      "src/types.ts",
+      "src/shell.ts",
+      "src/core.ts",
+      "src/constants.ts",
+      "src/cmdSession.ts",
+      "src/plugins/bash.ts",
+      "src/plugins/tape.ts"
+    ],
+    "external": [
+      "vite",
+      "vitest",
+      "@termless/core",
+      "@termless/vt100",
+      "node-pty"
+    ],
+    "format": "esm"
   },
   "engines": {
     "bun": ">=1.0.0",

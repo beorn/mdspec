@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // mdspec — Cram-style Markdown doctest runner (Bun, per-command execution with state persistence)
 //
 // Usage:

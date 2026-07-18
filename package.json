@@ -118,7 +118,7 @@
   "dependencies": {
     "debug": "^4.4.3",
     "github-slugger": "^2.0.0",
-    "glob": "^11.0.0",
+    "glob": "^13.0.6",
     "mdast-util-to-string": "^4.0.0",
     "remark-parse": "^11.0.0",
     "unified": "^11.0.5"
@@ -132,7 +132,7 @@
     "@types/debug": "^4.1.13",
     "@types/mdast": "^4.0.4",
     "@types/node": "^25.6.0",
-    "commander": "^14.0.3",
+    "commander": "^15.0.0",
     "loggily": "^0.10.0",
     "tsdown": "^0.22.5",
     "typescript": "^6.0.3",

@@ -3,6 +3,7 @@
 
 import type { Plugin, FileOpts, BlockOpts, ReplResult } from "./types.js"
 import { loadPlugin } from "./loader.js"
+import { dirname, isAbsolute, resolve } from "node:path"
 import { parseFrontmatter, mergeOptions, parseHeadingOptions } from "./options.js"
 import { parseInfo } from "./core.js"
 import type { Heading, CodeBlock } from "./markdown.js"
@@ -83,6 +84,27 @@ export class PluginExecutor {
 
     // Merge options: frontmatter → heading → fence
     const merged = mergeOptions(this.frontmatterOpts, headingOpts, fenceOpts)
+
+    // A relative cwd is spec-file-anchored (like cram's $TESTDIR), NOT anchored
+    // to the hermetic tmpdir the run starts in — `cwd: ..` in frontmatter means
+    // "the directory above the spec file" regardless of where mdspec was invoked.
+    if (typeof merged.cwd === "string" && merged.cwd.length > 0 && !isAbsolute(merged.cwd)) {
+      merged.cwd = resolve(dirname(this.testFilePath), merged.cwd)
+    }
+
+    // `path:` — extra PATH entries (colon- or comma-separated), each spec-file-
+    // anchored when relative. Lets a quickstart spec run its repo's own bin dir
+    // as bare commands (`yrd …`) without callers pre-arranging PATH.
+    if (typeof merged.path === "string" && merged.path.length > 0) {
+      const entries = merged.path
+        .split(/[,:]/)
+        .filter((e) => e.length > 0)
+        .map((e) => (isAbsolute(e) ? e : resolve(dirname(this.testFilePath), e)))
+      const env = (merged.env as Record<string, string> | undefined) ?? {}
+      env.PATH = `${entries.join(":")}:${env.PATH ?? process.env.PATH ?? ""}`
+      merged.env = env
+      delete merged.path
+    }
 
     // Build BlockOpts
     const blockOpts: BlockOpts = {

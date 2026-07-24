@@ -48,6 +48,66 @@ describe("CLI directory args + fence env", () => {
     }
   })
 
+  test("relative frontmatter cwd is spec-file-anchored", () => {
+    const root = mkdtempSync(join(tmpdir(), "mdspec-cwd-"))
+    try {
+      const sub = join(root, "anchor", "specs")
+      mkdirSync(sub, { recursive: true })
+      writeFileSync(
+        join(sub, "cwd.spec.md"),
+        [
+          "---",
+          "mdspec:",
+          "  cwd: ..",
+          "---",
+          "# cwd",
+          "",
+          "```console",
+          "$ basename \"$(pwd)\"",
+          "anchor",
+          "```",
+        ].join("\n"),
+      )
+      // Invoked from an unrelated cwd: `cwd: ..` must resolve against the SPEC's dir
+      const res = runCli([join(sub, "cwd.spec.md")], root)
+      expect(res.out).toContain("1 block(s), 0 failed")
+      expect(res.status).toBe(0)
+    } finally {
+      rmSync(root, { recursive: true, force: true })
+    }
+  })
+
+  test("frontmatter path: exposes a spec-anchored bin dir as bare commands", () => {
+    const root = mkdtempSync(join(tmpdir(), "mdspec-path-"))
+    try {
+      const specs = join(root, "specs")
+      const bin = join(root, "bin")
+      mkdirSync(specs, { recursive: true })
+      mkdirSync(bin, { recursive: true })
+      writeFileSync(join(bin, "hellotool"), "#!/bin/sh\necho from-hellotool\n", { mode: 0o755 })
+      writeFileSync(
+        join(specs, "path.spec.md"),
+        [
+          "---",
+          "mdspec:",
+          "  path: ../bin",
+          "---",
+          "# path",
+          "",
+          "```console",
+          "$ hellotool",
+          "from-hellotool",
+          "```",
+        ].join("\n"),
+      )
+      const res = runCli([join(specs, "path.spec.md")], root)
+      expect(res.out).toContain("1 block(s), 0 failed")
+      expect(res.status).toBe(0)
+    } finally {
+      rmSync(root, { recursive: true, force: true })
+    }
+  })
+
   test("directory with no *.spec.md fails loud with exit 2", () => {
     const root = mkdtempSync(join(tmpdir(), "mdspec-empty-"))
     try {

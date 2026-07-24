@@ -1,8 +1,10 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 // mdspec — Cram-style Markdown doctest runner (Bun, per-command execution with state persistence)
 //
 // Usage:
-//   bun mdspec [--update] <file.md> [more.md ...]
+//   bun mdspec [--update] <file.md|dir> [more ...]
+//     - a directory argument runs every *.spec.md under it (recursive)
+//     - fences inherit $TESTDIR (dir of the spec file, cram-style) and $ROOT (invocation cwd)
 //
 // Fences (cram style only):
 //   ```console     (preferred for nice highlighting)   or   ```sh
@@ -77,7 +79,7 @@
 // -----------------------------------------------------------------------------
 
 import { readFile, writeFile } from "node:fs/promises"
-import { mkdtempSync, writeFileSync, rmSync, realpathSync } from "node:fs"
+import { mkdtempSync, writeFileSync, rmSync, realpathSync, existsSync, statSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join, dirname, isAbsolute } from "node:path"
 import { fileURLToPath } from "node:url"
@@ -144,6 +146,16 @@ function maybeTrunc(line: string): string {
 const files: string[] = []
 if (isDirectRun) {
   for (const pattern of patterns) {
+    // A directory argument means "run every *.spec.md under it"
+    if (existsSync(pattern) && statSync(pattern).isDirectory()) {
+      const specs = await glob(join(pattern, "**/*.spec.md"), { nodir: true })
+      if (specs.length === 0) {
+        console.error(`Error: directory ${pattern} contains no *.spec.md files`)
+        process.exit(2)
+      }
+      files.push(...specs.sort())
+      continue
+    }
     const matches = await glob(pattern, { nodir: true })
     if (matches.length === 0) {
       // If no glob match, treat as literal file path (preserves shell behavior)
@@ -212,6 +224,8 @@ async function testFile(
   try {
     // Read test file from original path (before chdir)
     const testFilePath = isAbsolute(path) ? path : join(originalCwd, path)
+    // Cram-style $TESTDIR: absolute dir of the spec file, invocation-independent
+    process.env.TESTDIR = dirname(testFilePath)
     log.debug?.("Reading test file: %s", testFilePath)
     const md = await readFile(testFilePath, "utf8")
     const { headings, codeBlocks } = parseMarkdown(md)

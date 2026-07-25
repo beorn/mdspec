@@ -71,6 +71,24 @@ Applied 3 migrations.
 ```
 ````
 
+### Fixture Lifecycle
+
+Set up once from clean shell state and guarantee teardown, even after a failed
+example:
+
+````markdown
+```beforeAll reset
+export FIXTURE="$(mktemp -d)"
+cd "$FIXTURE"
+```
+
+```afterAll
+rm -rf "$FIXTURE"
+```
+````
+
+Lifecycle fence bodies are raw shell and do not count as executable examples.
+
 ### Plugins
 
 Replace shell execution with in-process TypeScript plugins for dramatically faster test runs:

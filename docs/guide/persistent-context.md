@@ -58,6 +58,50 @@ unset
 
 After a reset, environment variables, working directory, and functions start fresh.
 
+`reset` returns the shell to the spec file's original temporary directory.
+
+## Lifecycle Fences
+
+Use raw shell lifecycle fences when a spec needs shared setup or explicit
+teardown. `reset` commonly belongs on `beforeAll` so setup starts from fresh
+shell state:
+
+````markdown
+```beforeAll reset
+export FIXTURE_DIR="$(mktemp -d)"
+cd "$FIXTURE_DIR"
+printf 'ready\n' > status.txt
+```
+
+```afterAll
+rm -rf "$FIXTURE_DIR"
+```
+
+```console
+$ cat status.txt
+ready
+```
+````
+
+Lifecycle fences contain raw shell, not console-style `$` commands.
+`beforeAll` runs once before any test block, `beforeEach` runs before each
+block, and the matching `afterEach` and `afterAll` fences are guaranteed even
+when setup or a test fails. They are declarations and do not count as
+executable test blocks. State changed by a lifecycle fence is saved for the
+next command just like state changed by a normal block.
+
+The older shell-function form (`$ beforeAll() { ... }` in a `console` fence)
+remains supported for compatibility. Prefer lifecycle fences in new specs.
+
+Use the two mechanisms for different jobs:
+
+- `beforeAll` and `afterAll` define the lifetime of fixtures, processes, and
+  other resources.
+- `reset` deliberately discards accumulated shell context before one block.
+
+Keep cleanup in `afterAll` when it affects anything outside shell context.
+Resetting variables does not stop a process or remove a temporary directory.
+
 ## Helper Files
 
 Create files in the test temp directory using `file=` in the fence info string. These are written before any tests run and are available to all blocks.

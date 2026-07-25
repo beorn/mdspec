@@ -32,19 +32,22 @@
 //     - env=K=V,...: export vars before running (persist globally afterwards)
 //     - reset      : clear the global env/cwd/func snapshot before this block
 //
-// Setup/Teardown hooks (bash functions):
-//   Define bash functions in console blocks:
-//     ```console
-//     $ beforeAll() {
-//     >   export TEST_DIR=$(mktemp -d)
-//     > }
+// Lifecycle fences (raw shell, declaration-only):
+//     ```beforeAll reset
+//     export TEST_DIR=$(mktemp -d)
+//     cd "$TEST_DIR"
+//     ```
+//     ```afterAll
+//     rm -rf "$TEST_DIR"
 //     ```
 //
-//   Hook types (auto-called at lifecycle points if defined):
-//     - beforeAll()  : run once before first test block (after it's defined)
-//     - beforeEach() : run before each test block
-//     - afterEach()  : run after each test block (even on failure)
-//     - afterAll()   : run once after all test blocks (even on failure)
+//   Lifecycle types:
+//     - beforeAll  : run once before the first test block
+//     - beforeEach : run before each test block
+//     - afterEach  : run after each test block (even on failure)
+//     - afterAll   : run once after all test blocks (even on failure)
+//
+//   Legacy bash-function hooks in console fences remain supported.
 //
 //   Helper functions:
 //     Any other function name becomes a reusable command:
@@ -87,6 +90,7 @@ import { glob } from "glob"
 import { Command } from "@silvery/commander"
 import { parseInfo, parseBlock, matchLines, hasPatterns, hintMismatch } from "./core.js"
 import { parseMarkdown, findNearestHeading, generateTestId } from "./markdown.js"
+import { executeLifecycleFences, isLifecycleKind } from "./lifecycle.js"
 import { PluginExecutor } from "./plugin-executor.js"
 import { stripAnsi } from "./utils.js"
 import { log, logFiles } from "./logger.js"
@@ -236,6 +240,12 @@ async function testFile(
     const bodyTexts = new Map<number, string>()
     if (SHOW_BODY) {
       const lines = md.split("\n")
+      const fencedLines = new Set<number>()
+      for (const block of codeBlocks) {
+        const start = block.position.start.line - 1
+        const end = block.position.end.line
+        for (let line = start; line < end; line++) fencedLines.add(line)
+      }
       let lastEndLine = 0
 
       for (const block of codeBlocks) {
@@ -247,8 +257,8 @@ async function testFile(
         // EXCLUDING headings (we output those separately)
         const bodyLines: string[] = []
         for (let i = lastEndLine; i < blockStartLine; i++) {
+          if (fencedLines.has(i)) continue
           const line = lines[i]!
-          if (line.startsWith("```")) continue // Skip fence markers
           if (line.startsWith("#")) continue // Skip headings (we output those separately)
           bodyLines.push(line)
         }
@@ -287,17 +297,20 @@ async function testFile(
     const executor = new PluginExecutor(testFilePath, md)
     await executor.initialize(codeBlocks)
 
-    // Filter to console/sh blocks and convert to fence format for compatibility
-    const fences = codeBlocks
-      .filter((block) => block.lang === "console" || block.lang === "sh")
+    // Convert executable and lifecycle blocks to the fence format used below.
+    // `bash` remains documentation-only; lifecycle fences are declarations and
+    // are excluded from executable test counts.
+    const allFences = codeBlocks
+      .filter((block) => block.lang === "console" || block.lang === "sh" || isLifecycleKind(block.lang))
       .map((block) => ({
-        lang: block.lang as "console" | "sh",
+        lang: block.lang!,
         info: block.meta || "",
         text: block.value,
         start: block.position.start.offset || 0,
         end: block.position.end.offset || 0,
         body: bodyTexts.get(block.position.start.offset || 0),
       }))
+    const fences = allFences.filter((f) => !isLifecycleKind(f.lang))
 
     // Output file header (markdown format) - skip in dots/TAP mode
     if (!DOTS && !TAP) {
@@ -319,6 +332,11 @@ async function testFile(
     const seenTestIds = new Set<string>()
     let lastHeadingText: string | null = null
 
+    const clearCaptures = () => {
+      Object.keys(capsStdout).forEach((key) => delete capsStdout[key])
+      Object.keys(capsStderr).forEach((key) => delete capsStderr[key])
+    }
+
     // Pre-scan: find blocks that define hook functions and execute them first
     // This ensures beforeAll() can be defined in any block, not just the first
     const hookPattern = /^\$ (beforeAll|afterAll|beforeEach|afterEach)\(\)/m
@@ -332,11 +350,12 @@ async function testFile(
       }
     }
 
-    // Call beforeAll once, before any test block runs
-    await executor.beforeAll()
-
-    // Run all blocks as tests — wrapped in try/finally to guarantee afterAll runs
+    // Lifecycle fences are raw shell declarations. Legacy shell-function hooks
+    // remain supported and run after their matching first-class fence.
     try {
+      await executeLifecycleFences(executor, codeBlocks, headings, "beforeAll", clearCaptures)
+      await executor.beforeAll()
+
       for (let i = 0; i < fences.length; i++) {
         const f = fences[i]!
         total++
@@ -372,11 +391,11 @@ async function testFile(
           Object.keys(capsStderr).forEach((k) => delete capsStderr[k])
         }
 
-        // Call beforeEach hook
-        await executor.beforeEach()
-
         // Wrap block execution + comparison in try/finally to guarantee afterEach runs
         try {
+          await executeLifecycleFences(executor, codeBlocks, headings, "beforeEach", clearCaptures)
+          await executor.beforeEach()
+
           // Execute block using plugin
           const blockResult = await executor.executeBlock({ lang: f.lang, info: f.info, text: f.text }, nearestHeading)
 
@@ -534,13 +553,21 @@ async function testFile(
             replacements.push({ start: f.start, end: f.end, newText: newFence })
           }
         } finally {
-          // Call afterEach hook — guaranteed even on error/exception
-          await executor.afterEach()
+          try {
+            await executeLifecycleFences(executor, codeBlocks, headings, "afterEach", clearCaptures)
+          } finally {
+            // Legacy afterEach hook — guaranteed even when the fence fails.
+            await executor.afterEach()
+          }
         }
       }
     } finally {
-      // Call afterAll hook — guaranteed even on error/exception
-      await executor.afterAll()
+      try {
+        await executeLifecycleFences(executor, codeBlocks, headings, "afterAll", clearCaptures)
+      } finally {
+        // Legacy afterAll hook — guaranteed even when setup or a test fails.
+        await executor.afterAll()
+      }
     }
 
     return { fails: failures, total, replacements }

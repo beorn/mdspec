@@ -51,8 +51,10 @@ export function bash(opts: FileOpts, pluginOpts?: BashPluginOptions): Plugin {
       // Skip file= blocks (already written in factory)
       if (opts.file) return null
 
-      // Only handle shell blocks
-      if (!["console", "sh", "bash"].includes(opts.type)) {
+      const lifecycleFence = ["beforeAll", "afterAll", "beforeEach", "afterEach"].includes(opts.type)
+
+      // Handle executable examples plus raw shell lifecycle fences.
+      if (!["console", "sh", "bash"].includes(opts.type) && !lifecycleFence) {
         return null
       }
 
@@ -78,7 +80,8 @@ export function bash(opts: FileOpts, pluginOpts?: BashPluginOptions): Plugin {
         }
 
         // Build script with state persistence
-        const script = buildScript([cmd], blockOpts, envFile, cwdFile, funcFile)
+        const command = lifecycleFence ? `set -e\n${cmd}` : cmd
+        const script = buildScript([command], blockOpts, envFile, cwdFile, funcFile)
 
         // Execute command
         const res = await shell(["bash", "-lc", script], {

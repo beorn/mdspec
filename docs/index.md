@@ -20,6 +20,8 @@ features:
     details: Match dynamic output with ellipsis wildcards, regular expressions, and named captures that can be reused across commands.
   - title: Persistent Context
     details: Environment variables, working directory, and bash functions persist across code blocks within a test file.
+  - title: Fixture Lifecycle
+    details: Raw beforeAll/afterAll shell fences set up shared fixtures from clean state and guarantee teardown after failures.
   - title: Plugin System
     details: Replace bash subprocess execution with in-process plugins for up to 8x faster test runs.
   - title: REPL Testing

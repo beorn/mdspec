@@ -53,6 +53,56 @@ $ date +"%Y"
 
 Each `console` code fence is a test block. Lines starting with `$` are commands; everything else is expected output.
 
+## Set Up and Tear Down Once
+
+Each spec file already starts in a fresh temporary directory. Define
+`beforeAll` and `afterAll` lifecycle fences when the examples need a shared
+fixture or another resource with an explicit lifetime. Their bodies are raw
+shell, without console-style `$` prompts:
+
+````markdown
+## Setup
+
+```beforeAll reset
+export FIXTURE_DIR="$(mktemp -d)"
+cd "$FIXTURE_DIR"
+printf 'ready\n' > status.txt
+```
+
+```afterAll
+rm -rf "$FIXTURE_DIR"
+```
+
+## Example
+
+```console
+$ cat status.txt
+ready
+```
+````
+
+`reset` clears accumulated shell state before setup. mdspec runs `beforeAll`
+once before the test blocks and guarantees `afterAll` after the last block even
+when setup or a test fails. Lifecycle fences are declarations, not tests, so
+they do not appear in the executable block count.
+
+Environment variables, the working directory, and shell functions created by
+the setup hook persist between blocks. `$ROOT` points back to the source tree
+when a fixture needs project files.
+
+Use a `console reset` fence when a later example must discard accumulated shell
+state and return to the spec's original temporary directory:
+
+````markdown
+```console reset
+$ echo "${FIXTURE_DIR:-unset}"
+unset
+```
+````
+
+Resetting shell context does not stop external processes or remove temporary
+directories; lifecycle resources still belong in `afterAll`.
+
 ## Run It
 
 ```bash

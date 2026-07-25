@@ -12,6 +12,7 @@ import { readFile } from "fs/promises"
 import { PluginExecutor } from "../plugin-executor.js"
 import { parseFrontmatter } from "../options.js"
 import { PLUGIN_LANGUAGES } from "../loader.js"
+import { executeLifecycleFences } from "../lifecycle.js"
 
 // Constants
 const MAX_TEST_NAME_LENGTH = 60
@@ -181,6 +182,10 @@ function registerTests(
     // Capture state for assertions
     const capsStdout: Record<string, string> = {}
     const capsStderr: Record<string, string> = {}
+    const clearCaptures = () => {
+      Object.keys(capsStdout).forEach((key) => delete capsStdout[key])
+      Object.keys(capsStderr).forEach((key) => delete capsStderr[key])
+    }
 
     // Test isolation: temp directory per file (matches CLI behavior)
     let originalCwd: string
@@ -208,25 +213,33 @@ function registerTests(
         }
       }
 
+      await executeLifecycleFences(executor, codeBlocks, headings, "beforeAll", clearCaptures)
       await executor.beforeAll()
     })
 
     adapter.beforeEach(async () => {
+      await executeLifecycleFences(executor, codeBlocks, headings, "beforeEach", clearCaptures)
       await executor.beforeEach()
     })
 
     adapter.afterEach(async () => {
-      await executor.afterEach()
+      try {
+        await executeLifecycleFences(executor, codeBlocks, headings, "afterEach", clearCaptures)
+      } finally {
+        await executor.afterEach()
+      }
     })
 
     adapter.afterAll(async () => {
-      await executor.afterAll()
-
-      process.chdir(originalCwd)
       try {
+        try {
+          await executeLifecycleFences(executor, codeBlocks, headings, "afterAll", clearCaptures)
+        } finally {
+          await executor.afterAll()
+        }
+      } finally {
+        process.chdir(originalCwd)
         rmSync(tempDir, { recursive: true, force: true })
-      } catch {
-        // Ignore cleanup errors
       }
     })
 

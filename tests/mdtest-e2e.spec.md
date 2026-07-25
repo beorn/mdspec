@@ -4,14 +4,19 @@ Comprehensive feature testing using mdspec to test itself.
 
 ## Setup
 
+```beforeAll reset
+export TEST_ROOT="$(mktemp -d)"
+cd "$TEST_ROOT"
+printf 'ready\n' > lifecycle-ready
+```
+
+```afterAll
+rm -rf "$TEST_ROOT"
+```
+
 ```console
-$ beforeAll() {
->   export TEST_ROOT="$(mktemp -d)"
->   cd "$TEST_ROOT"
-> }
-$ afterAll() {
->   rm -rf "$TEST_ROOT"
-> }
+$ cat "$TEST_ROOT/lifecycle-ready"
+ready
 ```
 
 ## Basic Command Execution

@@ -53,7 +53,8 @@ $ false
 
 ### `reset`
 
-Clear all accumulated state (env, cwd, functions) before this block.
+Clear all accumulated state (env, cwd, functions) before this block and return
+to the spec file's original temporary directory.
 
 ````markdown
 ```console reset
@@ -61,6 +62,24 @@ $ echo "${MYVAR:-unset}"
 unset
 ```
 ````
+
+Use `beforeAll`/`afterAll` lifecycle fences for fixture lifetime and `reset`
+when a particular block needs fresh shell context. The common setup form is:
+
+````markdown
+```beforeAll reset
+export FIXTURE_DIR="$(mktemp -d)"
+cd "$FIXTURE_DIR"
+```
+
+```afterAll
+rm -rf "$FIXTURE_DIR"
+```
+````
+
+Lifecycle fence bodies are raw shell. They are declarations rather than tests,
+so they do not count as executable blocks. Resetting shell state does not clean
+up external resources; keep that work in `afterAll`.
 
 ### `timeout`
 

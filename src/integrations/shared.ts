@@ -2,7 +2,7 @@
 // Extracts the common code from bun.ts and vitest.ts
 
 import { glob } from "glob"
-import { basename, isAbsolute, resolve, join } from "node:path"
+import { basename, dirname, isAbsolute, resolve, join } from "node:path"
 import { mkdtempSync, rmSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { parseBlock, matchLines, hintMismatch } from "../core.js"
@@ -73,7 +73,7 @@ export async function registerMdTestFile(adapter: FrameworkAdapter, filePath: st
   const frontmatter = parseFrontmatter(md)
   const pluginName = (frontmatter.plugin as string) ?? "bash"
   const pluginLangs = PLUGIN_LANGUAGES[pluginName]
-  const acceptedLangs = pluginLangs ?? ["console", "sh", "bash"]
+  const acceptedLangs = pluginLangs ?? ["console", "sh"]
 
   const structure = buildTestStructure(codeBlocks, headings, acceptedLangs)
   const displayName = basename(absPath)
@@ -82,14 +82,14 @@ export async function registerMdTestFile(adapter: FrameworkAdapter, filePath: st
 
 // ============ Constants ============
 
-const SHELL_LANGS = new Set(["console", "sh", "bash"])
+const SHELL_LANGS = new Set(["console", "sh"])
 
 // ============ Test Structure ============
 
 function buildTestStructure(
   codeBlocks: CodeBlock[],
   headings: Heading[],
-  acceptedLangs: string[] = ["console", "sh", "bash"],
+  acceptedLangs: string[] = ["console", "sh"],
 ): TestStructure {
   const result: TestStructure = { headings: [] }
   const headingBlockCounts = new Map<string, number>()
@@ -190,15 +190,20 @@ function registerTests(
     // Test isolation: temp directory per file (matches CLI behavior)
     let originalCwd: string
     let tempDir: string
+    let originalRoot: string | undefined
+    let originalTestDir: string | undefined
 
     adapter.beforeAll(async () => {
       originalCwd = process.cwd()
+      originalRoot = process.env.ROOT
+      originalTestDir = process.env.TESTDIR
       tempDir = mkdtempSync(join(tmpdir(), "mdspec-"))
       process.chdir(tempDir)
 
       if (!process.env.ROOT) {
         process.env.ROOT = originalCwd
       }
+      process.env.TESTDIR = dirname(filePath)
 
       await executor.initialize(codeBlocks)
 
@@ -240,6 +245,10 @@ function registerTests(
       } finally {
         process.chdir(originalCwd)
         rmSync(tempDir, { recursive: true, force: true })
+        if (originalRoot === undefined) delete process.env.ROOT
+        else process.env.ROOT = originalRoot
+        if (originalTestDir === undefined) delete process.env.TESTDIR
+        else process.env.TESTDIR = originalTestDir
       }
     })
 

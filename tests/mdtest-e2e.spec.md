@@ -19,6 +19,17 @@ $ cat "$TEST_ROOT/lifecycle-ready"
 ready
 ```
 
+## Runner parity
+
+```console
+$ basename "$TESTDIR"
+tests
+```
+
+```bash
+$ false
+```
+
 ## Basic Command Execution
 
 ```console

@@ -326,8 +326,8 @@ describe("tape language filter", () => {
 
   test("PLUGIN_LANGUAGES has bash entries", async () => {
     const { PLUGIN_LANGUAGES } = await import("../src/loader")
-    expect(PLUGIN_LANGUAGES.bash).toEqual(["console", "sh", "bash"])
-    expect(PLUGIN_LANGUAGES.sh).toEqual(["console", "sh", "bash"])
+    expect(PLUGIN_LANGUAGES.bash).toEqual(["console", "sh"])
+    expect(PLUGIN_LANGUAGES.sh).toEqual(["console", "sh"])
   })
 })
 

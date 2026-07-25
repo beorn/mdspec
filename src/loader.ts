@@ -19,8 +19,8 @@ const BUILTIN_PLUGINS: Record<string, PluginFactory | (() => Promise<PluginFacto
  * Used by the test integration layer to discover which blocks to process.
  */
 export const PLUGIN_LANGUAGES: Record<string, string[]> = {
-  bash: ["console", "sh", "bash"],
-  sh: ["console", "sh", "bash"],
+  bash: ["console", "sh"],
+  sh: ["console", "sh"],
   tape: ["tape"],
 }
 

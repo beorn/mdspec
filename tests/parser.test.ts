@@ -320,6 +320,14 @@ describe("matching", () => {
       expect(keys).toEqual([])
     })
 
+    test("capture repeated within its defining line", () => {
+      const { re, keys } = compileExpectedLineToRegex("ID: {{id:*}} / {{id}} / {{id}}", {})
+      const match = "ID: ABC-123 / ABC-123 / ABC-123".match(re)
+      expect(match?.groups?.id).toBe("ABC-123")
+      expect(re.test("ID: ABC-123 / XYZ-789 / ABC-123")).toBe(false)
+      expect(keys).toEqual(["id"])
+    })
+
     test("capture with regex", () => {
       const { re, keys } = compileExpectedLineToRegex("UUID: {{uuid:/[0-9A-F-]{36}/}}", {})
       const match = "UUID: 123E4567-E89B-12D3-A456-426614174000".match(re)

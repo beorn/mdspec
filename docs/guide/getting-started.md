@@ -81,10 +81,13 @@ ready
 ```
 ````
 
-`reset` clears accumulated shell state before setup. mdspec runs `beforeAll`
-once before the test blocks and guarantees `afterAll` after the last block even
-when setup or a test fails. Lifecycle fences are declarations, not tests, so
-they do not appear in the executable block count.
+`reset` clears accumulated shell state before setup and returns to the spec's
+temporary working directory. The new shell still inherits mdspec's process
+environment, so explicitly export empty values for any ambient application
+variables that would make a fixture target live services. mdspec runs
+`beforeAll` once before the test blocks and guarantees `afterAll` after the last
+block even when setup or a test fails. Lifecycle fences are declarations, not
+tests, so they do not appear in the executable block count.
 
 Environment variables, the working directory, and shell functions created by
 the setup hook persist between blocks. `$ROOT` points back to the source tree

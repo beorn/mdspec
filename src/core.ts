@@ -182,13 +182,17 @@ export function compileExpectedLineToRegex(line: string, caps: Record<string, st
 
   escaped = escaped.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&")
   const keys: string[] = []
+  const capturedOnLine = new Set<string>()
 
   for (const ph of placeholders) {
     const tag = new RegExp(`\\u0000CAP${ph.idx}\\u0000`, "g")
     let frag: string
     let shouldCapture = true
 
-    if (ph.spec === undefined) {
+    if (capturedOnLine.has(ph.key)) {
+      frag = `\\k<${ph.key}>`
+      shouldCapture = false
+    } else if (ph.spec === undefined) {
       const prev = caps[ph.key]
       if (prev === undefined) frag = `(?<${ph.key}>.+)`
       else {
@@ -201,7 +205,10 @@ export function compileExpectedLineToRegex(line: string, caps: Record<string, st
     } else frag = `(?<${ph.key}>.+)`
 
     escaped = escaped.replace(tag, frag)
-    if (shouldCapture) keys.push(ph.key)
+    if (shouldCapture) {
+      keys.push(ph.key)
+      capturedOnLine.add(ph.key)
+    }
   }
 
   // Replace wildcard marker with regex that matches anything

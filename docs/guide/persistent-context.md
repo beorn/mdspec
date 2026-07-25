@@ -56,7 +56,10 @@ unset
 ```
 ````
 
-After a reset, environment variables, working directory, and functions start fresh.
+After a reset, accumulated environment changes, working directory, and functions
+start fresh. The shell still inherits mdspec's process environment; use `unset`
+for the current lifecycle shell, or export empty values when ambient application
+variables must stay shadowed across later fences.
 
 `reset` returns the shell to the spec file's original temporary directory.
 

@@ -7,6 +7,21 @@ export interface BlockOptions {
   reset?: boolean
   timeout?: number // Timeout in milliseconds (default: 30000ms / 30s)
 
+  /**
+   * `set -u` inside the block. Default TRUE.
+   *
+   * An unset variable aborts the command instead of silently expanding to the
+   * empty string — which is how `<destructive-command> "$ROOT"` becomes
+   * `<destructive-command> ""` (a no-op that reads as success) or, once a
+   * suffix is appended, an absolute path under `/`. `set -e` is deliberately
+   * NOT applied: the runner asserts on exit codes itself and specs routinely
+   * exercise failing commands.
+   *
+   * Opt out per block with `nounset=false` when a spec legitimately reads a
+   * possibly-unset variable; prefer `${VAR:-}` in the spec instead.
+   */
+  nounset?: boolean
+
   // Custom command mode (persistent subprocess)
   cmd?: string // Custom command to run (e.g., "km sh board.md")
   minWait?: number // Min silence (ms) before capture complete (default: 100)

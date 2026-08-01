@@ -109,6 +109,14 @@ export function buildScript(
     }
   }
 
+  // `set -u` LAST in the preamble: the restored env/cwd/function state above is
+  // machine-written and may legitimately reference unset names, so it must load
+  // first. From here on an unset variable aborts the command rather than
+  // expanding to "" — the failure mode that turns a mangled fixture path into a
+  // silent no-op or an absolute path under `/`. Deliberately not `set -e`: the
+  // runner asserts exit codes itself and specs exercise failing commands.
+  if (opts.nounset !== false) pre.push("set -u")
+
   const body = commands.join("\n")
 
   // Save updated state

@@ -3,8 +3,9 @@
 
 import { glob } from "glob"
 import { basename, dirname, isAbsolute, resolve, join } from "node:path"
-import { mkdtempSync, rmSync } from "node:fs"
+import { mkdtempSync, realpathSync } from "node:fs"
 import { tmpdir } from "node:os"
+import { safeRemoveSync } from "removely"
 import { parseBlock, matchLines, hintMismatch } from "../core.js"
 import { parseMarkdown, findNearestHeading, generateTestId } from "../markdown.js"
 import type { Heading, CodeBlock } from "../markdown.js"
@@ -244,7 +245,7 @@ function registerTests(
         }
       } finally {
         process.chdir(originalCwd)
-        rmSync(tempDir, { recursive: true, force: true })
+        safeRemoveSync(tempDir, { within: realpathSync(tmpdir()), allowMissing: true })
         if (originalRoot === undefined) delete process.env.ROOT
         else process.env.ROOT = originalRoot
         if (originalTestDir === undefined) delete process.env.TESTDIR

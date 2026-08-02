@@ -121,6 +121,7 @@
     "glob": "^13.0.6",
     "mdast-util-to-string": "^4.0.0",
     "remark-parse": "^11.0.0",
+    "removely": "^0.1.0",
     "unified": "^11.0.5"
   },
   "devDependencies": {

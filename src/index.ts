@@ -82,7 +82,8 @@
 // -----------------------------------------------------------------------------
 
 import { readFile, writeFile } from "node:fs/promises"
-import { mkdtempSync, writeFileSync, rmSync, realpathSync, existsSync, statSync } from "node:fs"
+import { mkdtempSync, writeFileSync, realpathSync, existsSync, statSync } from "node:fs"
+import { safeRemoveSync } from "removely"
 import { tmpdir } from "node:os"
 import { join, dirname, isAbsolute } from "node:path"
 import { fileURLToPath } from "node:url"
@@ -576,11 +577,9 @@ async function testFile(
     process.chdir(originalCwd)
 
     // Cleanup temp directory (future: add --keep-temp flag to preserve for debugging)
-    try {
-      rmSync(testTempDir, { recursive: true, force: true })
-    } catch {
-      // Ignore cleanup errors (temp will be cleaned by OS eventually)
-    }
+    // The catch that used to sit here swallowed every cleanup failure, so a
+    // fixture leak — or a mis-expanded path — left the run green and silent.
+    safeRemoveSync(testTempDir, { within: realpathSync(tmpdir()), allowMissing: true })
   }
 }
 

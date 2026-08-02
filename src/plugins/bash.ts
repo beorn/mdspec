@@ -1,9 +1,10 @@
 // Bash plugin for mdspec - default execution mode
 // Extracts state-based bash execution logic into plugin interface
 
-import { existsSync, mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from "node:fs"
+import { mkdirSync, mkdtempSync, realpathSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
-import { dirname, join, sep } from "node:path"
+import { dirname, join } from "node:path"
+import { safeRemoveSync } from "removely"
 import { splitNorm, trimTrailingEmptyLines } from "../core.js"
 import { buildScript, buildHookScript } from "../shell.js"
 import { portableShell } from "../spawn.js"
@@ -17,36 +18,19 @@ export type ShellFn = (cmd: string[], opts?: ShellOptions) => Promise<ShellResul
 /**
  * Remove a harness-owned temp root and PROVE it is gone.
  *
- * Deliberately narrow: it only ever receives a path this factory created under
- * the OS temp dir, so it asserts that containment rather than trusting it, and
- * it reports a survivor instead of swallowing the error. mdspec must build
- * standalone (vendor-independence rule), so this cannot import the repo's
- * shared `safeRemove` — it mirrors its two load-bearing properties: containment
- * is checked, and removal is verified.
+ * This used to be a hand-rolled mirror of the shared primitive, written that
+ * way because the primitive lived inside an agent harness that mdspec could not
+ * depend on without breaking the standalone-clone rule. `removely` is that same
+ * primitive rehomed as a zero-dependency npm leaf, so the mirror is deleted and
+ * the real check is used — which also fixes where the copy had drifted: the
+ * mirror only `console.error`d on a survivor and returned, so a fixture leak
+ * left the suite green. `safeRemoveSync` throws.
  */
 function removeVerified(root: string): void {
-  // `root` is already realpath-resolved at creation. Resolving here instead
-  // would be a TOCTOU and, on macOS, would also compare an unresolved
-  // `/var/folders/...` against a resolved `/private/var/folders/...` — the
-  // string-prefix trap this check exists to avoid.
-  const base = realpathSync(tmpdir())
-  if (!root.startsWith(base + sep)) {
-    throw new Error(`mdspec: refusing to remove ${root} — not inside ${base}`)
-  }
-  try {
-    rmSync(root, { recursive: true })
-  } catch (error) {
-    const code = (error as NodeJS.ErrnoException).code
-    if (code !== "ENOENT") {
-      // eslint-disable-next-line no-console
-      console.error(`mdspec: temp root ${root} could not be removed: ${String(error)}`)
-      return
-    }
-  }
-  if (existsSync(root)) {
-    // eslint-disable-next-line no-console
-    console.error(`mdspec: temp root ${root} SURVIVED teardown — fixture leak.`)
-  }
+  // `root` is already realpath-resolved at creation, and safeRemoveSync
+  // re-resolves both sides before comparing, so the unresolved-vs-resolved
+  // `/var/folders` prefix trap cannot bite.
+  safeRemoveSync(root, { within: realpathSync(tmpdir()), allowMissing: true })
 }
 
 /** Options for the bash plugin factory */

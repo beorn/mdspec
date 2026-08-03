@@ -118,7 +118,10 @@ export function bash(opts: FileOpts, pluginOpts?: BashPluginOptions): Plugin {
         const script = buildScript([command], blockOpts, envFile, cwdFile, funcFile)
 
         // Execute command
-        const res = await shell(["bash", "-lc", script], {
+        // Specs inherit the caller's explicit environment. A login shell
+        // re-runs host profiles and may replace PATH (and therefore the Bun,
+        // Git, or CLI version under test) with an unrelated machine default.
+        const res = await shell(["bash", "--noprofile", "--norc", "-c", script], {
           cwd,
           env: process.env as Record<string, string>,
           timeout,
@@ -166,7 +169,7 @@ export function bash(opts: FileOpts, pluginOpts?: BashPluginOptions): Plugin {
   // Helper to call bash hooks
   async function callHook(hookName: string): Promise<void> {
     const script = buildHookScript(hookName, envFile, cwdFile, funcFile)
-    await shell(["bash", "-lc", script], {
+    await shell(["bash", "--noprofile", "--norc", "-c", script], {
       cwd: process.cwd(),
       env: process.env as Record<string, string>,
     })

@@ -157,7 +157,7 @@ describe("bash plugin shellFn parameter", () => {
         const result = await exec("echo hello")
         expect(result).not.toBeNull()
         expect(shellCalls.length).toBeGreaterThan(0)
-        expect(shellCalls[0]!.cmd[0]).toBe("bash")
+        expect(shellCalls[0]!.cmd.slice(0, 4)).toEqual(["bash", "--noprofile", "--norc", "-c"])
       }
     } finally {
       process.chdir(originalCwd)

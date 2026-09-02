@@ -127,8 +127,8 @@
   "devDependencies": {
     "@bearly/vitepress-enrich": "^0.3.0",
     "@silvery/commander": "^0.21.0",
-    "@termless/core": "^0.8.1",
-    "@termless/vt100": "^0.8.1",
+    "@termless/core": ">=0.8.1 <1.0.0",
+    "@termless/vt100": ">=0.8.1 <1.0.0",
     "@types/bun": "^1.3.12",
     "@types/debug": "^4.1.13",
     "@types/mdast": "^4.0.4",

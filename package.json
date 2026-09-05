@@ -106,6 +106,7 @@
   },
   "scripts": {
     "build": "tsdown",
+    "prepack": "bun run build",
     "test": "bunx --bun vitest run",
     "typecheck": "tsc --noEmit",
     "ci": "bun run typecheck && bun run test",

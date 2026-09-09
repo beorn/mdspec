@@ -5,7 +5,7 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 
 /**
- * Two harness-owned safety properties:
+ * Harness-owned shell safety properties:
  *
  *   1. `set -u` by default. An unset variable aborts the command instead of
  *      expanding to the empty string. That expansion is what turns a mangled
@@ -14,6 +14,8 @@ import { join } from "node:path"
  *   2. `$MDSPEC_FIXTURE` — a harness-created scratch root, removed after the
  *      file regardless of outcome, so specs never write their own teardown.
  *      Namespaced because `FIXTURE` is a name specs already use themselves.
+ *   3. `set -o pipefail` by default, with command-local opt-out, so a failed
+ *      upstream stage cannot be hidden by a successful pipeline consumer.
  *
  * `set -e` is deliberately NOT applied: the runner asserts exit codes itself
  * and specs routinely exercise failing commands.
@@ -98,6 +100,46 @@ after
 \`\`\`
 `)
     expect(run(spec).exitCode).toBe(0)
+  })
+})
+
+/**
+ * @failure An upstream pipeline failure is accepted as success, or disabling
+ * pipefail for one command leaks into later commands.
+ * @level l3
+ * @consumer Markdown authors using the CLI Bash runner
+ */
+describe("set -o pipefail by default", () => {
+  test("asserts upstream failures, saves shell state, and keeps errexit off", () => {
+    const spec = writeSpec(`# Pipeline failures
+
+\`\`\`console
+$ export MDSPEC_PIPELINE_STATE=preserved; false | cat
+[1]
+\`\`\`
+
+\`\`\`console
+$ false; printf '%s\\n' "$MDSPEC_PIPELINE_STATE"
+preserved
+\`\`\`
+`)
+    const result = run(spec)
+    expect(result.output).toContain("2 block(s), 0 failed")
+    expect(result.exitCode).toBe(0)
+  })
+
+  test("allows an explicit opt-out for one command only", () => {
+    const spec = writeSpec(`# Pipeline opt-out
+
+\`\`\`console
+$ set +o pipefail; false | cat
+$ false | cat
+[1]
+\`\`\`
+`)
+    const result = run(spec)
+    expect(result.output).toContain("1 block(s), 0 failed")
+    expect(result.exitCode).toBe(0)
   })
 })
 

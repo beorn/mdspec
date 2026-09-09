@@ -71,6 +71,27 @@ Applied 3 migrations.
 ```
 ````
 
+### Shell defaults
+
+Ordinary Bash test commands run with `pipefail` on and `errexit` off. A failed
+upstream stage makes the pipeline fail, and expected nonzero exits remain
+assertable. Use standard Bash syntax to opt out for one command:
+
+````markdown
+```console
+$ false | cat
+[1]
+$ set +o pipefail; false | cat
+[0]
+$ false | cat
+[1]
+```
+````
+
+Each command runs in a fresh Bash, so the opt-out does not carry into the next
+command. These defaults apply to Bash execution, not code inside an embedded
+JavaScript REPL or a custom plugin.
+
 ### Fixture Lifecycle
 
 Set up once from clean shell state and guarantee teardown, even after a failed

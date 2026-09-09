@@ -109,6 +109,9 @@ export function buildScript(
     }
   }
 
+  // Report an upstream pipeline failure even when its final command succeeds.
+  pre.push("set -o pipefail")
+
   // `set -u` LAST in the preamble: the restored env/cwd/function state above is
   // machine-written and may legitimately reference unset names, so it must load
   // first. From here on an unset variable aborts the command rather than

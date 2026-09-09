@@ -95,7 +95,7 @@ printf 'yes\\n' > "$MARKER"
     expect(readFileSync(marker, "utf8")).toBe("yes\n")
   })
 
-  test("beforeAll fails on the first failing shell command and still runs afterAll", async () => {
+  test("beforeAll fails on an upstream pipeline failure and still runs afterAll", async () => {
     const dir = tempDir()
     const continued = join(dir, "continued")
     const tornDown = join(dir, "after-setup-failure")
@@ -106,7 +106,7 @@ printf 'yes\\n' > "$MARKER"
       `# Setup failure
 
 \`\`\`beforeAll reset
-false
+false | cat
 printf 'wrong\\n' > ${JSON.stringify(continued)}
 \`\`\`
 

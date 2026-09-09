@@ -73,19 +73,22 @@ Applied 3 migrations.
 
 ### Fixture Lifecycle
 
-Set up once from clean shell state and guarantee teardown, even after a failed
-example:
+Set up once from clean shell state. The harness owns the scratch directory and
+exports it as `$MDSPEC_FIXTURE`, so a spec never creates or deletes one:
 
 ````markdown
 ```beforeAll reset
-export FIXTURE="$(mktemp -d)"
-cd "$FIXTURE"
-```
-
-```afterAll
-rm -rf "$FIXTURE"
+cd "$MDSPEC_FIXTURE"
 ```
 ````
+
+**Do not write your own `mktemp -d` and teardown pair.** `afterAll` runs only
+when every preceding block succeeded, so the first failure, timeout or abort
+leaks the directory the teardown was supposed to remove — the guarantee that
+shape appears to give is one it cannot keep. Worse, `export NAME="$(mktemp -d)"`
+hides a failed creation: `export` supplies its own exit status, so `set -e` sees
+success, `NAME` is empty, writes land in the spec's own working directory, and
+`rm -rf "$NAME"` is a recursive delete of an unset variable.
 
 Lifecycle fence bodies are raw shell and do not count as executable examples.
 

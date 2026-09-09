@@ -57,20 +57,24 @@ Each `console` code fence is a test block. Lines starting with `$` are commands;
 
 Each spec file already starts in a fresh temporary directory. Define
 `beforeAll` and `afterAll` lifecycle fences when the examples need a shared
-fixture or another resource with an explicit lifetime. Their bodies are raw
-shell, without console-style `$` prompts:
+another resource with an explicit lifetime — a background process, a container,
+a remote record. Their bodies are raw shell, without console-style `$` prompts.
+
+The scratch directory is NOT such a resource: the harness creates it and removes
+it, and exports it as `$MDSPEC_FIXTURE`. A spec that rolls its own leaks it on
+the first failure, because `afterAll` runs only after every preceding block has
+succeeded.
 
 ````markdown
 ## Setup
 
 ```beforeAll reset
-export FIXTURE_DIR="$(mktemp -d)"
-cd "$FIXTURE_DIR"
+cd "$MDSPEC_FIXTURE"
 printf 'ready\n' > status.txt
 ```
 
 ```afterAll
-rm -rf "$FIXTURE_DIR"
+kill "$(cat server.pid)"
 ```
 
 ## Example

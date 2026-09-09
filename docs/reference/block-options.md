@@ -63,19 +63,22 @@ unset
 ```
 ````
 
-Use `beforeAll`/`afterAll` lifecycle fences for fixture lifetime and `reset`
-when a particular block needs fresh shell context. The common setup form is:
+Use `beforeAll`/`afterAll` lifecycle fences for resources with an explicit
+lifetime and `reset` when a particular block needs fresh shell context. The
+common setup form is:
 
 ````markdown
 ```beforeAll reset
-export FIXTURE_DIR="$(mktemp -d)"
-cd "$FIXTURE_DIR"
-```
-
-```afterAll
-rm -rf "$FIXTURE_DIR"
+cd "$MDSPEC_FIXTURE"
 ```
 ````
+
+`$MDSPEC_FIXTURE` is a scratch directory the harness creates before the first
+block and removes after the last one, exported to every block and fence. It is
+namespaced so it cannot clobber a `FIXTURE` name a spec already uses. Specs must
+not create or delete their own: `afterAll` runs only when every preceding block
+succeeded, so a hand-rolled pair leaks on the first failure it was written to
+survive.
 
 Lifecycle fence bodies are raw shell. They are declarations rather than tests,
 so they do not count as executable blocks. Resetting shell state does not clean

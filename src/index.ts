@@ -34,7 +34,7 @@
 //
 // Lifecycle fences (raw shell, declaration-only):
 //     ```beforeAll reset
-//     export TEST_DIR=$(mktemp -d)
+//     cd "$MDSPEC_FIXTURE"
 //     cd "$TEST_DIR"
 //     ```
 //     ```afterAll

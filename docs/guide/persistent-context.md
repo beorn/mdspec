@@ -71,13 +71,8 @@ shell state:
 
 ````markdown
 ```beforeAll reset
-export FIXTURE_DIR="$(mktemp -d)"
-cd "$FIXTURE_DIR"
+cd "$MDSPEC_FIXTURE"
 printf 'ready\n' > status.txt
-```
-
-```afterAll
-rm -rf "$FIXTURE_DIR"
 ```
 
 ```console

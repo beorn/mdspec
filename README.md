@@ -6,6 +6,8 @@
 
 ## Quick Start
 
+> Install from npm; a git install resolves the TypeScript source and runs only under Bun.
+
 **Requires Bun >=1.0 or Node.js >=18.** PTY testing (`cmd=` attribute) on Node.js requires [`node-pty`](https://www.npmjs.com/package/node-pty).
 
 ```bash

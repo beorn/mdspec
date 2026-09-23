@@ -1,5 +1,5 @@
 /**
- * @reach fs-walk <fixture-only: testDir = mkdtempSync(join(tmpdir(), ...)); all readdirSync/readFileSync calls target snapshot dirs under this temp root.>
+ * @reach fs-walk <fixture-only: testDir=mkdtempSync(tmpdir()); snapshot reads scoped there>
  */
 import { describe, test, expect, beforeEach, afterEach } from "vitest"
 import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs"

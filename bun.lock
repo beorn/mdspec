@@ -10,7 +10,7 @@
         "glob": "^13.0.6",
         "mdast-util-to-string": "^4.0.0",
         "remark-parse": "^11.0.0",
-        "removely": "^0.1.0",
+        "removely": "^0.2.1",
         "unified": "^11.0.5",
       },
       "devDependencies": {
@@ -729,7 +729,7 @@
 
     "remark-stringify": ["remark-stringify@11.0.0", "", { "dependencies": { "@types/mdast": "^4.0.0", "mdast-util-to-markdown": "^2.0.0", "unified": "^11.0.0" } }, "sha512-1OSmLd3awB/t8qdoEOMazZkNsfVTeY4fTsgzcQFdXNq8ToTN4ZGwrMnlda4K6smTFKD+GRV6O48i6Z4iKgPPpw=="],
 
-    "removely": ["removely@0.1.0", "", { "bin": { "removely": "./dist/cli.mjs" } }, "sha512-k0fZjY/7phBNLjQgKEkZ+KyfrfqAWCEmV8RJ7g7cEBG2123ifnDsGnrZsVm4cky0Qw6nR5CSxG4Nwtrl0X0mxg=="],
+    "removely": ["removely@0.2.1", "", { "bin": { "removely": "dist/cli.mjs" } }, "sha512-GVhHWIHAjz59ZVg0nYO93dIKfOibmdEKzc3eFHuPrvqCVg+idA3ey9Ysiz7xoawFgs/XMrXzfkBqRacjj7qbwA=="],
 
     "require-directory": ["require-directory@2.1.1", "", {}, "sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q=="],
 

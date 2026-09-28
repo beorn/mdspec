@@ -141,7 +141,7 @@
     "vitepress": "^1.6.4",
     "vitepress-plugin-llms": "^1.13.3",
     "vitest": "^4.1.4",
-    "zod": "^4.3.6"
+    "zod": "4.6.5"
   },
   "peerDependencies": {
     "@termless/core": ">=0.8.1",

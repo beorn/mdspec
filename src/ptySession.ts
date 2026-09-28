@@ -19,8 +19,9 @@ import { buildSessionPrelude } from "./shell.js"
 import { DEFAULTS, OSC_133_A_PATTERN, OSC_133_D_PATTERN, OSC_133_ANY_PATTERN } from "./constants.js"
 import { sleep, spawnPty, type PtyProcess } from "./spawn.js"
 // Strip ANSI escape codes (colors, cursor movement, clearing, etc.)
-// Common codes: m=color, G=cursor column, J=clear, K=erase, H=position, A-D=move
-const ANSI_ESCAPE_PATTERN = /\x1b\[[0-9;]*[A-Za-z]/g
+// Common codes: m=color, G=cursor column, J=clear, K=erase, H=position, A-D=move;
+// `?` covers private modes such as readline's bracketed-paste toggles (`\x1b[?2004l`)
+const ANSI_ESCAPE_PATTERN = /\x1b\[[?0-9;]*[A-Za-z]/g
 
 export interface PtySessionOpts {
   cwd?: string

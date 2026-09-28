@@ -220,6 +220,26 @@ done
   })
 
   describe("PTY-specific features", () => {
+    test("strips private-mode escapes under a real TERM (bracketed paste)", async () => {
+      // bash 5.x readline toggles bracketed paste (`\x1b[?2004h` / `\x1b[?2004l`)
+      // around each command when TERM names a real terminal; the `?` must not
+      // leak those codes into stdout.
+      const session = new PtySession("bash --norc --noprofile", {
+        minWait: 50,
+        maxWait: 1000,
+        env: { TERM: "xterm-256color" },
+      })
+      try {
+        const result = await session.execute("echo bar")
+        const stdout = result.stdout.toString()
+        expect(stdout).not.toContain("\x1b")
+        const firstLine = stdout.split("\n").find((l) => l.trim() && !l.includes("$"))
+        expect(firstLine?.trim()).toBe("bar")
+      } finally {
+        await session.close()
+      }
+    })
+
     test("uses specified terminal size", async () => {
       const session = new PtySession("bash --norc --noprofile", {
         minWait: 50,

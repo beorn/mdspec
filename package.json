@@ -129,7 +129,7 @@
     "@silvery/commander": "^0.21.0",
     "@termless/core": ">=0.8.1 <1.0.0",
     "@termless/vt100": ">=0.8.1 <1.0.0",
-    "@types/bun": "^1.3.12",
+    "@types/bun": "1.4.2",
     "@types/debug": "^4.1.13",
     "@types/mdast": "^4.0.4",
     "@types/node": "^25.6.0",
@@ -139,7 +139,7 @@
     "typescript": "^6.0.3",
     "vite": "8.3.1",
     "vitepress": "^1.6.4",
-    "vitepress-plugin-llms": "^1.13.3",
+    "vitepress-plugin-llms": "1.14.0",
     "vitest": "^4.1.4",
     "zod": "4.6.5"
   },

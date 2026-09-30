@@ -105,7 +105,7 @@
     }
   },
   "scripts": {
-    "build": "tsdown",
+    "build": "tsdown && bun scripts/publish-shebang.ts",
     "test": "bunx --bun vitest run",
     "typecheck": "tsc --noEmit",
     "ci": "bun run typecheck && bun run test",
@@ -137,7 +137,7 @@
     "loggily": "^0.10.0",
     "tsdown": "0.22.13",
     "typescript": "^6.0.3",
-    "verify-publishable": "github:beorn/verify-publishable#f634aef30d11ab0a7610ed5e82dc92bebdaab601",
+    "verify-publishable": "github:beorn/verify-publishable#7657e6b176113eae4ae5ff32a2cf2d6371bc1016",
     "vite": "8.3.1",
     "vitepress": "^1.6.4",
     "vitepress-plugin-llms": "1.14.0",

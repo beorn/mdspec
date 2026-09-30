@@ -1,4 +1,4 @@
-// vendor-kit: publish-shebang@b5393eca915a — generated; edit km/packages/km-infra/vendor-kit/templates/publish-shebang.ts.tmpl in km, then re-sync
+// vendor-kit: publish-shebang@3c477a147ca0 — generated; edit km/packages/km-infra/vendor-kit/templates/publish-shebang.ts.tmpl in km, then re-sync
 // Stamp each packed bin with the interpreter its manifest promises (hh #26691, @cto d7f039e2, 0bd0a5a0). The rule is
 // verify-publishable's binShebangRuntime; vendor-kit evaluated it at generation time over every engines state and
 // rendered the answers below, so this script depends on nothing a consumer's install must supply. Run it after the
@@ -55,9 +55,11 @@ interface Manifest {
 function bins(manifest: Manifest): Array<[string, string]> {
   const declared = manifest.publishConfig?.bin ?? manifest.bin
   if (declared === undefined) return []
-  if (typeof declared === "string") return [[String(manifest.name).split("/").at(-1) ?? "", declared]]
+  const packageName = String(manifest.name).split("/").at(-1) ?? ""
+  if (typeof declared === "string") return [[packageName, declared]]
   if (declared === null || typeof declared !== "object" || Array.isArray(declared)) {
-    throw new Error(`PUBLISH_SHEBANG_BIN_INVALID: package=${manifest.name} bin=${JSON.stringify(declared)}`)
+    const shape = JSON.stringify(declared)
+    throw new Error(`PUBLISH_SHEBANG_BIN_INVALID: package=${manifest.name} bin=${shape}`)
   }
   return Object.entries(declared).map(([name, target]) => {
     if (typeof target !== "string" || target === "") {
@@ -83,6 +85,7 @@ if (declared.length === 0) {
         `PUBLISH_SHEBANG_TARGET_MISSING: package=${manifest.name} bin=${name} target=${target}; build first`,
       )
     }
+    const where = `${manifest.name} bin ${name} (${target})`
     const content = readFileSync(path, "utf8")
     const newline = content.indexOf("\n")
     const firstLine = newline === -1 ? content : content.slice(0, newline)
@@ -90,10 +93,10 @@ if (declared.length === 0) {
       ? shebang + (newline === -1 ? "\n" : content.slice(newline))
       : `${shebang}\n${content}`
     if (next === content) {
-      process.stdout.write(`publish-shebang: ${manifest.name} bin ${name} (${target}) already ${shebang}\n`)
+      process.stdout.write(`publish-shebang: ${where} already ${shebang}\n`)
       continue
     }
     writeFileSync(path, next)
-    process.stdout.write(`publish-shebang: ${manifest.name} bin ${name} (${target}) stamped ${shebang}\n`)
+    process.stdout.write(`publish-shebang: ${where} stamped ${shebang}\n`)
   }
 }

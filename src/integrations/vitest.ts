@@ -5,7 +5,6 @@
 // import { registerMdTests } from 'mdspec/vitest'
 // await registerMdTests('tests/e2e/**/*.spec.md')
 
-import { test, describe, beforeAll, afterAll, beforeEach, afterEach } from "vitest"
 import type { FrameworkAdapter } from "./shared.js"
 import {
   registerMdTests as registerMdTestsShared,
@@ -14,14 +13,25 @@ import {
 } from "./shared.js"
 import type { ShellResult, ShellOptions } from "../shell.js"
 
-// Vitest adapter: uses standard describe/test (Vitest runs tests sequentially by default within a file)
-const vitestAdapter: FrameworkAdapter = {
-  describe,
-  test,
-  beforeAll,
-  afterAll,
-  beforeEach,
-  afterEach,
+// Resolve the optional peer only when registration is requested. Discovery and
+// vitestShell remain usable without Vitest in a fresh consumer.
+let vitestAdapterPromise: Promise<FrameworkAdapter> | undefined
+
+function getVitestAdapter(): Promise<FrameworkAdapter> {
+  return (vitestAdapterPromise ??= import("vitest")
+    .then(({ test, describe, beforeAll, afterAll, beforeEach, afterEach }) => ({
+      describe,
+      test,
+      beforeAll,
+      afterAll,
+      beforeEach,
+      afterEach,
+    }))
+    .catch((cause: unknown) => {
+      const error = new Error("mdspec/vitest registration requires the optional Vitest peer", { cause })
+      error.name = "MdspecVitestPeerError"
+      throw error
+    }))
 }
 
 // Re-export discovery API
@@ -29,12 +39,12 @@ export { discoverMdTests }
 
 // Register all .spec.md files as Vitest tests
 export async function registerMdTests(pattern: string | string[] = "**/*.spec.md"): Promise<void> {
-  return registerMdTestsShared(vitestAdapter, pattern)
+  return registerMdTestsShared(await getVitestAdapter(), pattern)
 }
 
 // Register a single .spec.md file as Vitest tests
 export async function registerMdTestFile(filePath: string): Promise<void> {
-  return registerMdTestFileShared(vitestAdapter, filePath)
+  return registerMdTestFileShared(await getVitestAdapter(), filePath)
 }
 
 // ============ Shell Adapter (Node.js-based for Vitest) ============

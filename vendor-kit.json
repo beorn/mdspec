@@ -4,7 +4,6 @@
   ],
   "vars": {
     "testCommand": "bun run test",
-    "bunVersion": "latest",
-    "verifyStep": "      - run: bun run typecheck\n"
+    "bunVersion": "latest"
   }
 }

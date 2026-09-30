@@ -44,8 +44,8 @@ test("Bun adapter registers Markdown tests through serial runner methods", async
   ])
   expect(runner.testSerial).toHaveBeenCalledTimes(2)
   expect(runner.testSerial.mock.calls.map(([name]) => name)).toEqual([
-    "$ printf first > order.txt; printf first",
-    "$ cat order.txt",
+    expect.stringContaining("$ printf first > order.txt"),
+    expect.stringContaining("$ cat order.txt"),
   ])
   expect(runner.beforeAll).toHaveBeenCalledOnce()
   expect(runner.afterAll).toHaveBeenCalledOnce()

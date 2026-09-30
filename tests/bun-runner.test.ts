@@ -33,6 +33,7 @@ test("Bun collects awaited Markdown registration and runs its tests in serial or
     expect(output).toMatch(/2 pass/)
     expect(output).not.toMatch(/[1-9][0-9]* fail/)
   } finally {
-    rmSync(scratch, { recursive: true, force: true })
+    // raw-delete-allow: this test created scratch with mkdtempSync under os.tmpdir.
+    rmSync(scratch, { recursive: true })
   }
 })

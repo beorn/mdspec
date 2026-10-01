@@ -1,7 +1,8 @@
 {
   "modules": [
     "release",
-    "publish-shebang"
+    "publish-shebang",
+    "verify"
   ],
   "vars": {
     "testCommand": "bun run test",

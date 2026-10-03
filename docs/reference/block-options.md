@@ -83,7 +83,11 @@ up external resources; keep that work in `afterAll`.
 
 ### `timeout`
 
-Maximum execution time in milliseconds. Default: 30000 (30 seconds).
+Maximum execution time per command in milliseconds. Default: 30000 (30 seconds).
+
+Framework integrations register one test per block. Its allowance covers all
+command budgets plus the default 30 seconds for result collection and matching.
+Each command still stops at its own declared timeout.
 
 ````markdown
 ```console timeout=5000

@@ -21,7 +21,7 @@ function getBunAdapter(): Promise<FrameworkAdapter> {
   return (bunAdapterPromise ??= import("bun:test")
     .then(({ test, describe, beforeAll, afterAll, beforeEach, afterEach }) => ({
       describe: (name, fn) => describe.serial(name, fn),
-      test: (name, fn) => test.serial(name, fn),
+      test: (name, fn, timeout) => test.serial(name, fn, timeout),
       beforeAll,
       afterAll,
       beforeEach,

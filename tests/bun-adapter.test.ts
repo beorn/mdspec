@@ -1,5 +1,5 @@
 /**
- * @failure Bun Markdown registration stops using serial test and describe methods.
+ * @failure Bun Markdown registration drops serial registration or the resolved block timeout.
  * @level l1
  * @consumer #26691 mdspec/bun lazy adapter
  * @testonly none
@@ -47,6 +47,7 @@ test("Bun adapter registers Markdown tests through serial runner methods", async
     expect.stringContaining("$ printf first > order.txt"),
     expect.stringContaining("$ cat order.txt"),
   ])
+  expect(runner.testSerial.mock.calls.map((call) => call[2])).toEqual([5000, 45000])
   expect(runner.beforeAll).toHaveBeenCalledOnce()
   expect(runner.afterAll).toHaveBeenCalledOnce()
 })

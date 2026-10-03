@@ -6,12 +6,12 @@ import { basename, dirname, isAbsolute, resolve, join } from "node:path"
 import { mkdtempSync, realpathSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { safeRemoveSync } from "removely"
-import { parseBlock, matchLines, hintMismatch } from "../core.js"
+import { parseBlock, parseInfo, matchLines, hintMismatch } from "../core.js"
 import { parseMarkdown, findNearestHeading, generateTestId } from "../markdown.js"
 import type { Heading, CodeBlock } from "../markdown.js"
 import { readFile } from "fs/promises"
 import { PluginExecutor } from "../plugin-executor.js"
-import { parseFrontmatter } from "../options.js"
+import { parseFrontmatter, parseHeadingOptions, mergeOptions } from "../options.js"
 import { PLUGIN_LANGUAGES } from "../loader.js"
 import { executeLifecycleFences } from "../lifecycle.js"
 
@@ -26,7 +26,7 @@ const MAX_TEST_NAME_LENGTH = 60
  */
 export interface FrameworkAdapter {
   describe(name: string, fn: () => void): void
-  test(name: string, fn: () => Promise<void>): void
+  test(name: string, fn: () => Promise<void>, timeout?: number): void
   beforeAll(fn: () => Promise<void>): void
   afterAll(fn: () => Promise<void>): void
   beforeEach(fn: () => Promise<void>): void
@@ -289,7 +289,7 @@ function registerTests(
     for (const [pathKey, items] of sortedPaths) {
       items.sort((a, b) => a.index - b.index)
       const path = pathKey.split("\x00")
-      registerNestedTests(adapter, path, items, executor, capsStdout, capsStderr)
+      registerNestedTests(adapter, path, items, executor, capsStdout, capsStderr, parseFrontmatter(md))
     }
   })
 }
@@ -306,6 +306,7 @@ function registerNestedTests(
   executor: PluginExecutor,
   capsStdout: Record<string, string>,
   capsStderr: Record<string, string>,
+  fileOptions: Record<string, unknown>,
   depth = 0,
 ): void {
   if (depth >= path.length) {
@@ -328,83 +329,91 @@ function registerNestedTests(
       const isShell = SHELL_LANGS.has(item.block.lang || "console")
       const testPrefix = isShell ? "$ " : ""
 
-      adapter.test(`${testPrefix}${testName}`, async () => {
-        for (const step of item.steps) {
-          // Shell blocks: wrap with $ prefix for extractCommands()
-          // Non-shell blocks: pass content as-is to the plugin
-          let blockText: string
-          if (isShell) {
-            const cmdLines = step.cmd.split("\n")
-            blockText =
-              cmdLines.length === 1
-                ? `$ ${step.cmd}`
-                : `$ ${cmdLines[0]}\n${cmdLines
-                    .slice(1)
-                    .map((l) => `> ${l}`)
-                    .join("\n")}`
-          } else {
-            blockText = step.cmd
-          }
-
-          const blockResult = await executor.executeBlock(
-            {
-              lang: item.block.lang || "console",
-              info: item.block.meta || "",
-              text: blockText,
-            },
-            item.heading,
-          )
-
-          if (!blockResult) {
-            throw new Error("Plugin did not handle command")
-          }
-
-          const { results, exitCode } = blockResult
-          const stdout = results.flatMap((r) => r.stdout)
-          const stderr = results.flatMap((r) => r.stderr)
-
-          const wantStdout = step.expected.stdout ?? []
-          const wantStderr = step.expected.stderr ?? []
-          const wantExit = step.expected.exit ?? 0
-
-          const outMatch = matchLines(wantStdout, stdout, capsStdout)
-          const errMatch =
-            wantStderr.length === 0
-              ? matchLines(
-                  [],
-                  stderr.filter((l) => l.length),
-                  capsStderr,
-                )
-              : matchLines(
-                  wantStderr,
-                  stderr.filter((l) => l.length),
-                  capsStderr,
-                )
-          // null exitCode means "unknown" (no OSC 133 available) -- treat as passing
-          const exitOk = exitCode === null || exitCode === wantExit
-
-          if (!outMatch.ok || !errMatch.ok || !exitOk) {
-            const errors: string[] = []
-            errors.push(`Failed at command: $ ${step.cmd}`)
-            if (!outMatch.ok) {
-              errors.push(hintMismatch("stdout", wantStdout, stdout, outMatch.msg))
-            }
-            if (!errMatch.ok) {
-              errors.push(hintMismatch("stderr", wantStderr, stderr, errMatch.msg))
-            }
-            if (!exitOk) {
-              errors.push(`exit code: expected ${wantExit}, got ${exitCode}`)
-            }
-            throw new Error(errors.join("\n"))
-          }
-        }
+      const options = mergeOptions(fileOptions, item.heading ? parseHeadingOptions(item.heading.text) : {}, {
+        ...parseInfo(item.block.meta || ""),
       })
+      const timeout = typeof options.timeout === "number" ? options.timeout : undefined
+      adapter.test(
+        `${testPrefix}${testName}`,
+        async () => {
+          for (const step of item.steps) {
+            // Shell blocks: wrap with $ prefix for extractCommands()
+            // Non-shell blocks: pass content as-is to the plugin
+            let blockText: string
+            if (isShell) {
+              const cmdLines = step.cmd.split("\n")
+              blockText =
+                cmdLines.length === 1
+                  ? `$ ${step.cmd}`
+                  : `$ ${cmdLines[0]}\n${cmdLines
+                      .slice(1)
+                      .map((l) => `> ${l}`)
+                      .join("\n")}`
+            } else {
+              blockText = step.cmd
+            }
+
+            const blockResult = await executor.executeBlock(
+              {
+                lang: item.block.lang || "console",
+                info: item.block.meta || "",
+                text: blockText,
+              },
+              item.heading,
+            )
+
+            if (!blockResult) {
+              throw new Error("Plugin did not handle command")
+            }
+
+            const { results, exitCode } = blockResult
+            const stdout = results.flatMap((r) => r.stdout)
+            const stderr = results.flatMap((r) => r.stderr)
+
+            const wantStdout = step.expected.stdout ?? []
+            const wantStderr = step.expected.stderr ?? []
+            const wantExit = step.expected.exit ?? 0
+
+            const outMatch = matchLines(wantStdout, stdout, capsStdout)
+            const errMatch =
+              wantStderr.length === 0
+                ? matchLines(
+                    [],
+                    stderr.filter((l) => l.length),
+                    capsStderr,
+                  )
+                : matchLines(
+                    wantStderr,
+                    stderr.filter((l) => l.length),
+                    capsStderr,
+                  )
+            // null exitCode means "unknown" (no OSC 133 available) -- treat as passing
+            const exitOk = exitCode === null || exitCode === wantExit
+
+            if (!outMatch.ok || !errMatch.ok || !exitOk) {
+              const errors: string[] = []
+              errors.push(`Failed at command: $ ${step.cmd}`)
+              if (!outMatch.ok) {
+                errors.push(hintMismatch("stdout", wantStdout, stdout, outMatch.msg))
+              }
+              if (!errMatch.ok) {
+                errors.push(hintMismatch("stderr", wantStderr, stderr, errMatch.msg))
+              }
+              if (!exitOk) {
+                errors.push(`exit code: expected ${wantExit}, got ${exitCode}`)
+              }
+              throw new Error(errors.join("\n"))
+            }
+          }
+        },
+        timeout,
+      )
     }
     return
   }
 
   // Create describe block and recurse to preserve execution order
   adapter.describe(path[depth]!, () => {
-    registerNestedTests(adapter, path, items, executor, capsStdout, capsStderr, depth + 1)
+    registerNestedTests(adapter, path, items, executor, capsStdout, capsStderr, fileOptions, depth + 1)
   })
 }

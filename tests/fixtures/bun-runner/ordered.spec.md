@@ -1,8 +1,13 @@
+---
+mdspec:
+  timeout: 45000
+---
+
 # Bun registration order
 
 ## Write first
 
-```console
+```console timeout=5000
 $ printf first > order.txt; printf 'write first\n' >> "$MDSPEC_BUN_ORDER_FILE"; printf first
 first
 ```

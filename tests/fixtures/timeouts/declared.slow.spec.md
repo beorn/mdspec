@@ -16,3 +16,11 @@ first
 $ sleep 0.6; echo second
 second
 ```
+
+## Collect timeout result
+
+```console timeout=1000
+$ exec sleep 2
+! Command timed out after 1000ms
+[124]
+```

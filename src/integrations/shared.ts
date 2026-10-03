@@ -14,6 +14,7 @@ import { PluginExecutor } from "../plugin-executor.js"
 import { parseFrontmatter, parseHeadingOptions, mergeOptions } from "../options.js"
 import { PLUGIN_LANGUAGES } from "../loader.js"
 import { executeLifecycleFences } from "../lifecycle.js"
+import { DEFAULTS } from "../constants.js"
 
 // Constants
 const MAX_TEST_NAME_LENGTH = 60
@@ -332,7 +333,10 @@ function registerNestedTests(
       const options = mergeOptions(fileOptions, item.heading ? parseHeadingOptions(item.heading.text) : {}, {
         ...parseInfo(item.block.meta || ""),
       })
-      const timeout = typeof options.timeout === "number" ? options.timeout : undefined
+      const timeout = typeof options.timeout === "number" ? options.timeout : DEFAULTS.TIMEOUT
+      // The shell enforces this limit per command. The framework owns the whole
+      // block and needs the normal default allowance to collect timeout results.
+      const frameworkTimeout = timeout * item.steps.length + DEFAULTS.TIMEOUT
       adapter.test(
         `${testPrefix}${testName}`,
         async () => {
@@ -406,7 +410,7 @@ function registerNestedTests(
             }
           }
         },
-        timeout,
+        frameworkTimeout,
       )
     }
     return

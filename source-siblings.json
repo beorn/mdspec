@@ -1,0 +1,12 @@
+{
+  "schema": "vendor-kit/source-siblings/v1",
+  "siblings": [
+    {
+      "name": "removely",
+      "repository": "beorn/bearly",
+      "commit": "6045a7f141dba812c4add6d7c52cafa5213ef537",
+      "directory": "packages/removely",
+      "pack": true
+    }
+  ]
+}

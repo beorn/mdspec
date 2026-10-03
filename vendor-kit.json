@@ -2,7 +2,8 @@
   "modules": [
     "release",
     "publish-shebang",
-    "verify"
+    "verify",
+    "source-siblings"
   ],
   "vars": {
     "testCommand": "bun run test",

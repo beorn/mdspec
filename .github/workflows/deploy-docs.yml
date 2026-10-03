@@ -21,8 +21,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
-      - run: bun install --frozen-lockfile
+          bun-version: "1.4.2"
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "24"
+      - uses: ./.github/actions/source-siblings
       - run: bunx --bun vitepress build docs
       - name: Check for private-content leak
         run: bun scripts/check-private-leak.ts

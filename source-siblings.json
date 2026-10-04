@@ -7,6 +7,32 @@
       "commit": "6045a7f141dba812c4add6d7c52cafa5213ef537",
       "directory": "packages/removely",
       "pack": true
+    },
+    {
+      "name": "@silvery/commander",
+      "repository": "beorn/silvery",
+      "commit": "b956cf1ea635e8572179aaae1f4cc38f465a53bd",
+      "directory": "packages/commander",
+      "pack": true
+    },
+    {
+      "name": "@termless/core",
+      "repository": "beorn/termless",
+      "commit": "37d30fe7acfa77b01930f7e90ba0f3af8d7417f2",
+      "pack": true
+    },
+    {
+      "name": "@termless/vt100",
+      "repository": "beorn/termless",
+      "commit": "37d30fe7acfa77b01930f7e90ba0f3af8d7417f2",
+      "directory": "packages/vt100",
+      "pack": true
+    },
+    {
+      "name": "loggily",
+      "repository": "beorn/loggily",
+      "commit": "1918304aa42492f484353fbb113ed7b839ab360f",
+      "pack": true
     }
   ]
 }

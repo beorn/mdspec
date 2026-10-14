@@ -6,7 +6,7 @@ import { defineConfig } from "vitest/config"
 // relative to mdspec's directory and breaks ("Cannot find module
 // vendor/mdspec/packages/km-infra/vitest/setup.ts").
 //
-// mdspec is a standalone submodule per vendor/CLAUDE.md — `bun test` and
+// mdspec is a standalone submodule per vendor/AGENTS.md — `bun test` and
 // `vitest` must work from the package root without km infrastructure. Keep
 // this config self-contained.
 export default defineConfig({

@@ -19,14 +19,16 @@ let bunAdapterPromise: Promise<FrameworkAdapter> | undefined
 
 function getBunAdapter(): Promise<FrameworkAdapter> {
   return (bunAdapterPromise ??= import("bun:test")
-    .then(({ test, describe, beforeAll, afterAll, beforeEach, afterEach }) => ({
-      describe: (name, fn) => describe.serial(name, fn),
-      test: (name, fn, timeout) => test.serial(name, fn, timeout),
-      beforeAll,
-      afterAll,
-      beforeEach,
-      afterEach,
-    }))
+    .then(
+      ({ test, describe, beforeAll, afterAll, beforeEach, afterEach }): FrameworkAdapter => ({
+        describe: (name, fn) => describe.serial(name, fn),
+        test: (name, fn, timeout) => test.serial(name, fn, timeout),
+        beforeAll,
+        afterAll,
+        beforeEach,
+        afterEach,
+      }),
+    )
     .catch((cause: unknown) => {
       const error = new Error(
         "mdspec/bun registration requires the Bun runtime; importing for discovery and bunShell is supported under Node.js",

@@ -129,7 +129,7 @@
     "@silvery/commander": "^0.21.0",
     "@termless/core": ">=0.8.1 <1.0.0",
     "@termless/vt100": ">=0.8.1 <1.0.0",
-    "@types/bun": "1.4.2",
+    "@types/bun": "1.4.3",
     "@types/debug": "^4.1.13",
     "@types/mdast": "^4.0.4",
     "@types/node": "25.9.9",

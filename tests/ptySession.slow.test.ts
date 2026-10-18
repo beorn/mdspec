@@ -7,6 +7,33 @@ import { PtySession } from "../src/ptySession"
 // Skip on non-POSIX platforms
 const isWindows = process.platform === "win32"
 
+// Interactive bash saves its history on exit. Pin HOME and HISTFILE at the
+// file level so every PTY session writes test commands into this fixture
+// instead of the operator's real ~/.bash_history (25295).
+let historyHome: string
+let savedHome: string | undefined
+let savedHistfile: string | undefined
+
+beforeAll(() => {
+  historyHome = mkdtempSync(join(tmpdir(), "ptySession-home-"))
+  savedHome = process.env.HOME
+  savedHistfile = process.env.HISTFILE
+  process.env.HOME = historyHome
+  process.env.HISTFILE = join(historyHome, ".bash_history")
+})
+
+afterAll(() => {
+  if (savedHome === undefined) delete process.env.HOME
+  else process.env.HOME = savedHome
+  if (savedHistfile === undefined) delete process.env.HISTFILE
+  else process.env.HISTFILE = savedHistfile
+  try {
+    rmSync(historyHome, { recursive: true, force: true })
+  } catch {
+    // Ignore cleanup errors
+  }
+})
+
 describe.skipIf(isWindows)("PtySession", () => {
   let tempDir: string
 

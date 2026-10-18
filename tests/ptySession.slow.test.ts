@@ -27,11 +27,7 @@ afterAll(() => {
   else process.env.HOME = savedHome
   if (savedHistfile === undefined) delete process.env.HISTFILE
   else process.env.HISTFILE = savedHistfile
-  try {
-    rmSync(historyHome, { recursive: true, force: true })
-  } catch {
-    // Ignore cleanup errors
-  }
+  rmSync(historyHome, { recursive: true, force: true })
 })
 
 describe.skipIf(isWindows)("PtySession", () => {

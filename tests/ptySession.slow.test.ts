@@ -271,8 +271,9 @@ done
         rows: 40,
       })
       try {
-        // tput cols returns the terminal width
-        const result = await session.execute("tput cols")
+        // tput cols returns the terminal width. The sleep holds that output past minWait after the PTY's echo of the
+        // command, so the echo alone must not end the wait (31681).
+        const result = await session.execute("sleep 0.1; tput cols")
         const firstLine = result.stdout
           .toString()
           .split("\n")

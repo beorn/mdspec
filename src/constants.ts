@@ -38,14 +38,4 @@ export const DEFAULTS = {
     /** Milliseconds to wait for subprocess to be ready (0 = no startup wait) */
     STARTUP_DELAY: 0,
   },
-
-  /** PtySession (PTY-based) defaults */
-  PTY_SESSION: {
-    /** Milliseconds of silence before assuming command complete */
-    MIN_WAIT: 50,
-    /** Maximum wait time per command */
-    MAX_WAIT: 2000,
-    /** Milliseconds to wait for subprocess to be ready */
-    STARTUP_DELAY: 300,
-  },
 } as const

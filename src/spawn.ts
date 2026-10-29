@@ -1,6 +1,5 @@
 // src/spawn.ts — runtime-detecting subprocess spawning
 // Enables mdspec to work on both Bun and Node.js without external dependencies.
-// PTY mode on Node.js requires optional peer dependency `node-pty`.
 
 const isBun = typeof Bun !== "undefined"
 
@@ -179,93 +178,4 @@ export async function portableShell(cmd: string[], opts?: ShellOptions): Promise
       reject(err)
     })
   })
-}
-
-// ============ PTY spawning (PtySession) ============
-
-/** PTY process handle returned by spawnPty() */
-export interface PtyProcess {
-  write(data: string): void
-  close(): void
-  kill(): void
-  exitCode: number | null
-  exited: Promise<number>
-}
-
-/**
- * Spawn a subprocess in a PTY.
- * Uses Bun.spawn({terminal}) on Bun, node-pty on Node.js.
- * Node.js requires optional peer dependency `node-pty`.
- */
-export function spawnPty(
-  cmd: string[],
-  opts: {
-    env?: Record<string, string | undefined>
-    cwd?: string
-    cols: number
-    rows: number
-    onData: (data: string) => void
-  },
-): PtyProcess {
-  if (isBun) {
-    const proc = Bun.spawn(cmd, {
-      cwd: opts.cwd,
-      env: opts.env,
-      terminal: {
-        cols: opts.cols,
-        rows: opts.rows,
-        data: (_terminal: unknown, data: Uint8Array) => {
-          opts.onData(new TextDecoder().decode(data))
-        },
-      },
-    })
-    return {
-      // @ts-expect-error - terminal is added by Bun when terminal option is used
-      write: (d: string) => proc.terminal.write(d),
-      // @ts-expect-error - terminal is added by Bun when terminal option is used
-      close: () => proc.terminal.close(),
-      kill: () => proc.kill(),
-      get exitCode() {
-        return proc.exitCode
-      },
-      exited: proc.exited,
-    }
-  }
-
-  // Node.js: try node-pty (optional peer dependency)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let nodePty: any
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    nodePty = require("node-pty")
-  } catch {
-    throw new Error("PTY mode requires node-pty on Node.js. Install it: npm add node-pty")
-  }
-
-  const pty = nodePty.spawn(cmd[0]!, cmd.slice(1), {
-    cols: opts.cols,
-    rows: opts.rows,
-    cwd: opts.cwd,
-    env: opts.env as Record<string, string>,
-  })
-
-  pty.onData((data: string) => opts.onData(data))
-
-  let _exitCode: number | null = null
-  const exited = new Promise<number>((resolve) => {
-    pty.onExit(({ exitCode }: { exitCode: number }) => {
-      _exitCode = exitCode
-      resolve(exitCode)
-    })
-  })
-
-  return {
-    write: (d: string) => pty.write(d),
-    close: () => pty.kill(),
-    kill: () => pty.kill(),
-    get exitCode() {
-      return _exitCode
-    },
-    exited,
-  }
 }

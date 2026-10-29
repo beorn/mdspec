@@ -20,8 +20,7 @@ CLI (src/index.ts) — standalone runner with reporters
   └── Plugin Executor (src/plugin-executor.ts) — run blocks via plugins
         ├── Loader (src/loader.ts) — resolve + load plugins
         ├── Bash Plugin (src/plugins/bash.ts) — default bash execution
-        ├── CmdSession (src/cmdSession.ts) — persistent subprocess (cmd=)
-        └── PTY Session (src/ptySession.ts) — interactive shell via PTY
+        └── CmdSession (src/cmdSession.ts) — persistent subprocess (cmd=)
 
 Integrations (src/integrations/)
   ├── shared.ts — common test registration logic

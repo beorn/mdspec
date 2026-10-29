@@ -41,7 +41,7 @@ interface StateFiles {
 
 /**
  * Build a bash prelude script that loads session state and then runs a command.
- * Used by CmdSession and PtySession to wrap the subprocess command.
+ * Used by CmdSession to wrap the subprocess command.
  *
  * The prelude:
  * 1. Disables errexit (set +e) so the runner can check exit codes

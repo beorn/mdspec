@@ -5,9 +5,6 @@
 
 import { describe, test, expect } from "vitest"
 import { CmdSession } from "../src/cmdSession"
-import { PtySession } from "../src/ptySession"
-
-const isWindows = process.platform === "win32"
 
 // ============ Bug 1: session-exit-code ============
 
@@ -55,36 +52,6 @@ describe("session exit code when OSC 133 unavailable", () => {
     try {
       const result = await session.execute("test")
       // cat doesn't emit OSC 133 — maxWait timeout — exit code unknown
-      expect(result.exitCode).toBeNull()
-    } finally {
-      await session.close()
-    }
-  })
-
-  test.skipIf(isWindows)("PtySession returns null exitCode on silence-based fallback", async () => {
-    // cat doesn't emit OSC 133;D — falls back to silence detection
-    const session = new PtySession("cat", {
-      minWait: 50,
-      maxWait: 1000,
-    })
-    try {
-      const result = await session.execute("hello")
-      expect(result.stdout.toString().trim()).toBe("hello")
-      // Without OSC 133;D marker, exit code is unknown
-      expect(result.exitCode).toBeNull()
-    } finally {
-      await session.close()
-    }
-  })
-
-  test.skipIf(isWindows)("PtySession returns null exitCode on maxWait timeout", async () => {
-    const session = new PtySession("sleep 10", {
-      minWait: 50,
-      maxWait: 200,
-    })
-    try {
-      const result = await session.execute("")
-      // Timed out — exit code is unknown
       expect(result.exitCode).toBeNull()
     } finally {
       await session.close()

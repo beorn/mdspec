@@ -121,7 +121,6 @@
     "glob": "^13.0.6",
     "mdast-util-to-string": "^4.0.0",
     "remark-parse": "^11.0.0",
-    "removely": "^0.2.1",
     "unified": "^11.0.5"
   },
   "devDependencies": {
@@ -135,6 +134,7 @@
     "@types/node": "26.6.5",
     "commander": "^15.0.0",
     "loggily": "^0.10.0",
+    "removely": "^0.2.1",
     "tsdown": "0.23.7",
     "typescript": "^6.0.3",
     "vite": "8.3.3",
@@ -182,7 +182,12 @@
       "@termless/core",
       "@termless/vt100"
     ],
-    "format": "esm"
+    "format": "esm",
+    "deps": {
+      "alwaysBundle": [
+        "removely"
+      ]
+    }
   },
   "engines": {
     "bun": ">=1.0.0",
